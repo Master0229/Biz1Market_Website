@@ -54,10 +54,7 @@ import { LocationComponent } from './location/location.component'
 import { BankaccountsComponent } from './bankaccounts/bankaccounts.component'
 import { BankaccountdetailComponent } from './bankaccountdetail/bankaccountdetail.component'
 import { BillbyvendorComponent } from './billbyvendor/billbyvendor.component'
-
-
-
-
+import { TaxgroupComponent } from './taxgroup/taxgroup.component'
 
 const routes: Routes = [
   {
@@ -111,6 +108,11 @@ const routes: Routes = [
     data: { title: 'StockEntry App' },
   },
   {
+    path: 'taxgroup',
+    component: TaxgroupComponent,
+    data: { title: 'Taxgroup' },
+  },
+  {
     path: 'internaltransfer',
     component: InternalTransferComponent,
     data: { title: 'InternalTransfer App' },
@@ -123,38 +125,38 @@ const routes: Routes = [
   {
     path: 'purchaseentry',
     component: PurchaseEntryComponent,
-    data: { title: 'PurchaseEntry App'},
+    data: { title: 'PurchaseEntry App' },
   },
   {
     path: 'DispatchItem',
     component: DispatchItemsComponent,
-    data: { title: 'DispatchItem App'},
+    data: { title: 'DispatchItem App' },
   },
   {
     path: 'DispatchOrders',
     component: ReceiveOrdComponent,
-    data: { title: 'DispatchOrders App'},
+    data: { title: 'DispatchOrders App' },
   },
   {
     path: 'editreceive/:id',
     component: EditreceiveComponent,
-    data: { title: 'EditReceive App'},
+    data: { title: 'EditReceive App' },
   },
   {
     path: 'creditrepay',
     component: CreditrepayComponent,
-    data: { title: 'CreditRepay App'},
+    data: { title: 'CreditRepay App' },
   },
 
   {
     path: 'vendors',
     component: VendorsComponent,
-    data: { title: 'Vendors App'},
+    data: { title: 'Vendors App' },
   },
   {
     path: 'dispatch/:id',
     component: DispatchComponent,
-    data: { title: 'Dispatch App'},
+    data: { title: 'Dispatch App' },
   },
   // {
   //   path: 'editinternal/:id',
@@ -164,81 +166,80 @@ const routes: Routes = [
   {
     path: 'credit',
     component: CreditComponent,
-    data: { title: 'credit App'},
+    data: { title: 'credit App' },
   },
   {
     path: 'purchasemaint',
     component: PurchasemaintComponent,
-    data: { title: 'Purchasemaintainence App'},
+    data: { title: 'Purchasemaintainence App' },
   },
   {
     path: 'purchasebill',
     component: PurchasebillComponent,
-    data: { title: 'Purchasebill App'},
+    data: { title: 'Purchasebill App' },
   },
   {
     path: 'location',
     component: LocationComponent,
-    data: { title: 'Location App'},
+    data: { title: 'Location App' },
   },
   {
     path: 'bankaccount',
     component: BankaccountsComponent,
-    data: { title: 'Bankaccounts App'},
+    data: { title: 'Bankaccounts App' },
   },
   {
     path: 'bankaccountdetail/:id',
     component: BankaccountdetailComponent,
-    data: { title: 'Bankaccountdetail App'},
+    data: { title: 'Bankaccountdetail App' },
   },
   {
     path: 'billbyvendor',
     component: BillbyvendorComponent,
-    data: { title: 'Billbyvendor App'},
+    data: { title: 'Billbyvendor App' },
   },
 
   {
     path: 'billpaybyvendor',
     component: BillpaybyvendorComponent,
-    data: { title: 'Billpaybyvendor App'},
+    data: { title: 'Billpaybyvendor App' },
   },
   {
     path: 'asset',
     component: AssetsComponent,
-    data: { title: 'Assets App'},
+    data: { title: 'Assets App' },
   },
   {
     path: 'assettypes',
     component: AssettypesComponent,
-    data: { title: 'Asset Types App'},
+    data: { title: 'Asset Types App' },
   },
 
   {
     path: 'maintainencebilltypes',
     component: MaintbilltypesComponent,
-    data: { title: 'Maintainence BillTypes App'},
+    data: { title: 'Maintainence BillTypes App' },
   },
   {
     path: 'editcreditrepay/:id',
     component: EditcreditrepayComponent,
-    data: { title: 'EditCreditRepay App'},
+    data: { title: 'EditCreditRepay App' },
   },
   {
     path: 'creditdetails/:id',
     component: CreditdetailsComponent,
-    data: { title: 'CreditDetails App'},
+    data: { title: 'CreditDetails App' },
   },
   {
     path: 'editcreditdetails/:id',
     component: EditcreditdetailsComponent,
-    data: { title: 'EditCreditDetails App'},
+    data: { title: 'EditCreditDetails App' },
   },
-
 
   {
     path: 'editcredit/:id',
     component: EditcreditComponent,
-    data: { title: 'Editcredit App'},
+    data: { title: 'Editcredit App' },
   },
 
   {

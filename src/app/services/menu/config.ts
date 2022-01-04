@@ -97,167 +97,164 @@ export const getMenuData: any[] = [
   //   icon:'fe fe-shopping-cart',
   //   url: '/apps/sale',
   // },
+  {
+    category: true,
+    title: 'Website',
+  },
+  {
+    title: 'Product',
+    key: 'appsProfile',
+    icon: 'fe fe-grid',
+    url: '/apps/products',
+  },
+  {
+    title: 'Category',
+    key: 'appsProfile',
+    icon: 'fa fa-sitemap',
+    url: '/apps/category',
+  },
+  {
+    title: 'TaxGroup',
+    key: 'appsProfile',
+    icon: 'fa fa-calculator',
+    url: '/apps/taxgroup',
+  },
   // {
-  //   category: true,
-  //   title: 'Website',
-  // },
-  // {
-  //   title: 'Product',
-  //   key: 'appsProfile',
-  //   icon: 'fe fe-grid',
-  //   url: '/apps/products',
-  // },
-  // {
-  //   title: 'Category',
-  //   key: 'appsProfile',
-  //   icon: 'fa fa-sitemap',
-  //   url: '/apps/category',
-  // },
-
-  // // {
-  // //   title: 'Receipt',
-  // //   key: 'appsSetting',
-  // //   icon:'fe fe-book-open',
-  // //   url: '/apps/receipt',
-  // // },
-
-  // {
-  //   title: 'TaxGroup',
+  //   title: 'Receipt',
   //   key: 'appsSetting',
-  //   icon: 'fa fa-calculator',
-  //   url: '/apps/taxgroup',
-  // },
-  // // {
-  // //   title: 'Setting',
-  // //   key: 'appsSetting',
-  // //   icon:'fe fe-sliders',
-  // //   url: '/apps/setting',
-  // // },
-  // {
-  //   title: 'Batch Entry',
-  //   icon: 'fa fa-stack-overflow',
-  //   key: 'appsBatchEntry',
-  //   url: '/apps/batchentry',
+  //   icon:'fe fe-book-open',
+  //   url: '/apps/receipt',
   // },
   // {
-  //   title: 'Vendors',
+  //   title: 'Setting',
   //   key: 'appsSetting',
-  //   icon: 'fe fe-user-check',
-  //   url: '/apps/vendors',
+  //   icon:'fe fe-sliders',
+  //   url: '/apps/setting',
   // },
-  // {
-  //   title: 'Purchase Entry',
-  //   key: 'appsSetting',
-  //   icon: 'fe fe-shopping-bag',
-  //   url: '/apps/purchaseentry',
-  // },
-  // {
-  //   title: 'ProductOptions',
-  //   icon: 'fa fa-object-group',
-  //   key: 'appsProductOptions',
-  //   url: '/apps/productoptions',
-  // },
-  // {
-  //   title: 'Internal Transfer',
-  //   key: 'apps',
-  //   icon: 'fe fe-truck',
-  //   children: [
-  //     {
-  //       title: 'Dispatch Items',
-  //       key: 'appsDispatchItem',
-  //       url: '/apps/DispatchItem',
-  //     },
-  //     {
-  //       title: 'Dispatch Orders',
-  //       key: 'appsDispatchOrders',
-  //       url: '/apps/DispatchOrders',
-  //     },
-  //   ]
-  // },
-  // {
-  //   title: 'Maintenance',
-  //   key: 'apps',
-  //   icon: 'fa fa-server',
-  //   children: [
-  //     {
-  //       title: 'Assets',
-  //       key: 'appsAssets',
-  //       url: '/apps/asset',
-  //     },
-  //     {
-  //       title: 'Asset Types',
-  //       key: 'appsAssettypes',
-  //       url: '/apps/assettypes',
-  //     },
-  //     {
-  //       title: 'Maintainence Bill Types',
-  //       key: 'appsMaintbilltypes',
-  //       url: '/apps/maintainencebilltypes',
-  //     },
-  //   ]
-  // },
-  // {
-  //   title: 'Master Data',
-  //   key: 'apps',
-  //   icon: 'fa fa-star',
-  //   children: [
-
-  //     {
-  //       title: ' Location',
-  //       key: 'appslocation',
-  //       url: '/apps/location',
-  //     },
-  //     // {
-  //     //   title: ' Bankaccount',
-  //     //   key: 'appsBankaccount',
-  //     //   url: '/apps/bankaccount',
-  //     // }
-  //   ],
-  // },
-  // {
-  //   title: 'Finance',
-  //   key: 'apps',
-  //   icon: 'fa fa-credit-card',
-  //   children: [
-  //     {
-  //       title: ' Location',
-  //       key: 'appslocation',
-  //       url: '/apps/location',
-  //     },
-  //     {
-  //       title: ' Bankaccount',
-  //       key: 'appsBankaccount',
-  //       url: '/apps/bankaccount',
-  //     },
-  //     {
-  //       title: 'Credit',
-  //       key: 'appsCredit',
-  //       url: '/apps/credit',
-  //     },
-  //     {
-  //       title: 'Purchase/Maintainence',
-  //       key: 'appsPurchaseMaint',
-  //       url: '/apps/purchasemaint',
-  //     },
-  //     {
-  //       title: 'Bills Pay byVendor',
-  //       key: 'appsBillbyvendor',
-  //       url: '/apps/billbyvendor',
-  //     }
-  //   ],
-  // },
-  // {
-  //   title: 'Feedback',
-  //   icon: 'fa fa-heart',
-  //   key: 'extraAppsWordpressAdd',
-  //   url: '/apps/wordpress-add',
-  // },
-  // {
-  //   title: 'About Us',
-  //   icon: 'fe fe-alert-octagon',
-  //   key: 'extraAppsHelpdeskDashboard',
-  //   url: '/apps/helpdesk-dashboard',
-  // },
+  {
+    title: 'Batch Entry',
+    icon: 'fa fa-stack-overflow',
+    key: 'appsBatchEntry',
+    url: '/apps/batchentry',
+  },
+  {
+    title: 'Vendors',
+    key: 'appsSetting',
+    icon: 'fe fe-user-check',
+    url: '/apps/vendors',
+  },
+  {
+    title: 'Purchase Entry',
+    key: 'appsSetting',
+    icon: 'fe fe-shopping-bag',
+    url: '/apps/purchaseentry',
+  },
+  {
+    title: 'ProductOptions',
+    icon: 'fa fa-object-group',
+    key: 'appsProductOptions',
+    url: '/apps/productoptions',
+  },
+  {
+    title: 'Internal Transfer',
+    key: 'apps',
+    icon: 'fe fe-truck',
+    children: [
+      {
+        title: 'Dispatch Items',
+        key: 'appsDispatchItem',
+        url: '/apps/DispatchItem',
+      },
+      {
+        title: 'Dispatch Orders',
+        key: 'appsDispatchOrders',
+        url: '/apps/DispatchOrders',
+      },
+    ],
+  },
+  {
+    title: 'Maintenance',
+    key: 'apps',
+    icon: 'fa fa-server',
+    children: [
+      {
+        title: 'Assets',
+        key: 'appsAssets',
+        url: '/apps/asset',
+      },
+      {
+        title: 'Asset Types',
+        key: 'appsAssettypes',
+        url: '/apps/assettypes',
+      },
+      {
+        title: 'Maintainence Bill Types',
+        key: 'appsMaintbilltypes',
+        url: '/apps/maintainencebilltypes',
+      },
+    ],
+  },
+  {
+    title: 'Master Data',
+    key: 'apps',
+    icon: 'fa fa-star',
+    children: [
+      {
+        title: ' Location',
+        key: 'appslocation',
+        url: '/apps/location',
+      },
+      // {
+      //   title: ' Bankaccount',
+      //   key: 'appsBankaccount',
+      //   url: '/apps/bankaccount',
+      // }
+    ],
+  },
+  {
+    title: 'Finance',
+    key: 'apps',
+    icon: 'fa fa-credit-card',
+    children: [
+      {
+        title: ' Location',
+        key: 'appslocation',
+        url: '/apps/location',
+      },
+      {
+        title: ' Bankaccount',
+        key: 'appsBankaccount',
+        url: '/apps/bankaccount',
+      },
+      {
+        title: 'Credit',
+        key: 'appsCredit',
+        url: '/apps/credit',
+      },
+      {
+        title: 'Purchase/Maintainence',
+        key: 'appsPurchaseMaint',
+        url: '/apps/purchasemaint',
+      },
+      {
+        title: 'Bills Pay byVendor',
+        key: 'appsBillbyvendor',
+        url: '/apps/billbyvendor',
+      },
+    ],
+  },
+  {
+    title: 'Feedback',
+    icon: 'fa fa-heart',
+    key: 'extraAppsWordpressAdd',
+    url: '/apps/wordpress-add',
+  },
+  {
+    title: 'About Us',
+    icon: 'fe fe-alert-octagon',
+    key: 'extraAppsHelpdeskDashboard',
+    url: '/apps/helpdesk-dashboard',
+  },
   {
     // title: 'Setup',
     // key: 'apps',
@@ -268,7 +265,6 @@ export const getMenuData: any[] = [
     //     key: 'appsaddproduct',
     //     url: '/apps/addproduct',
     //   },
-
     //   // {
     //   //   title: 'StockEntry',
     //   //   key: 'appsStockEntry',
@@ -284,7 +280,6 @@ export const getMenuData: any[] = [
     //   //   key: 'appsProductOptions',
     //   //   url: '/apps/productoptions',
     //   // },
-
     // ],
   },
   // {
@@ -292,8 +287,6 @@ export const getMenuData: any[] = [
   //   key: 'apps',
   //   icon: 'fe fe-database',
   //   children: [
-
-
 
   //     {
   //       title: 'Profile',
@@ -520,11 +513,11 @@ export const getMenuData: any[] = [
   //       key: 'widgetsLists',
   //       url: '/widgets/lists',
   //     },
-  //     {
-  //       title: 'Tables',
-  //       key: 'widgetsTables',
-  //       url: '/widgets/tables',
-  //     },
+  {
+    title: 'Tables',
+    key: 'widgetsTables',
+    url: '/widgets/tables',
+  },
   //     {
   //       title: 'Charts',
   //       key: 'widgetsCharts',
@@ -549,23 +542,23 @@ export const getMenuData: any[] = [
   //     },
   //   ],
   // },
-  // {
-  //   title: 'Tables',
-  //   key: 'tables',
-  //   icon: 'fe fe-grid',
-  //   children: [
-  //     {
-  //       title: 'Ant Design',
-  //       key: 'tablesAntd',
-  //       url: '/tables/antd',
-  //     },
-  //     {
-  //       title: 'Bootstrap',
-  //       key: 'tablesBootstrap',
-  //       url: '/tables/bootstrap',
-  //     },
-  //   ],
-  // },
+  {
+    title: 'Tables',
+    key: 'tables',
+    icon: 'fe fe-grid',
+    children: [
+      {
+        title: 'Ant Design',
+        key: 'tablesAntd',
+        url: '/tables/antd',
+      },
+      {
+        title: 'Bootstrap',
+        key: 'tablesBootstrap',
+        url: '/tables/bootstrap',
+      },
+    ],
+  },
   // {
   //   title: 'Charts',
   //   key: 'charts',
@@ -699,5 +692,4 @@ export const getMenuData: any[] = [
   //   icon: 'fe fe-slash',
   //   disabled: true,
   // },
-
 ]
