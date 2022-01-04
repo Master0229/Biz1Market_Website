@@ -1,0 +1,106 @@
+<div>
+  <div class="cui__utils__heading">
+    <strong>Latest Orders</strong>
+  </div>
+  <div class="card">
+    <div class="card-header card-header-flex">
+      <!-- <div class="d-flex flex-column justify-content-center mr-auto">
+                <h5 class="mb-0">Latest Orders</h5>
+            </div> -->
+      <div class="d-flex flex-column justify-content-center mr-auto">
+        <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+          <input type="text" nz-input placeholder="input search text" />
+        </nz-input-group>
+        <ng-template #suffixIconButton>
+          <button nz-button nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
+        </ng-template>
+      </div>
+      <div class="d-flex flex-column justify-content-center mr-5">
+        <nz-range-picker></nz-range-picker>
+      </div>
+      <!-- <div class="d-flex flex-column justify-content-center mr-5">
+        <button nz-button nzType="primary" (click)="open()">Filter</button>
+      </div>
+      <nz-drawer [nzClosable]="false" [nzVisible]="visible" nzPlacement="right" nzTitle="Filter" (nzOnClose)="close()">
+        <div>
+          <span class="mb-5"><strong>Payment Status</strong> </span><br>
+          <div class="ml-3">
+            <label nz-checkbox [(ngModel)]="checked">All</label><br>
+            <label nz-checkbox [(ngModel)]="checked">Pending</label><br>
+            <label nz-checkbox [(ngModel)]="checked">Completed</label><br>
+            <label nz-checkbox [(ngModel)]="checked">Cancelled</label><br>
+          </div>
+        </div>
+        <div>
+          <span><strong>Order Status</strong></span><br>
+          <div class="ml-3">
+            <label nz-checkbox [(ngModel)]="checked">All</label><br>
+            <label nz-checkbox [(ngModel)]="checked">Paid</label><br>
+            <label nz-checkbox [(ngModel)]="checked">Unpaid</label><br>
+          </div>
+        </div>
+      </nz-drawer> -->
+      <div class="d-flex flex-column justify-content-center">
+        <a routerLink="/apps/sale" class="btn btn-success" href="javascript: void(0);">
+          New Order
+        </a>
+      </div>
+
+    </div>
+    <!-- <div class="card-body"> -->
+    <nz-table class="kit__utils__table mb-4">
+      <thead>
+        <tr>
+          <th>
+            Order No
+          </th>
+          <th>
+            Ordered At
+          </th>
+          <th>
+            Customer
+          </th>
+          <th>
+            Order Status
+          </th>
+          <th>
+            Payment Status
+          </th>
+          <th>
+            Paid Amount
+          </th>
+          <th>
+            Bill Amount
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let order of orders">
+          <td>
+            {{order.invoiceNo}}
+          </td>
+          <td>
+            {{order.orderedDate}}
+          </td>
+          <td>
+
+          </td>
+          <td>
+
+          </td>
+          <td>
+
+          </td>
+          <td>
+            {{order.billAmount}}
+          </td>
+          <td>
+            {{order.paidAmount}}
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+    <!-- </div> -->
+  </div>
+</div>
+<!-- ////////////////////////////////////invoice//////////////////////////////// -->
