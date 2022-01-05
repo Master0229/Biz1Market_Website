@@ -2,7 +2,40 @@
   <strong>Tax Groups</strong>
   <div class="card">
     <div class="card-body">
+      <div class="card-header card-header-flex">
+        <div class="d-flex flex-column justify-content-center mr-auto">
+          <div>
+            <input type="text" class="form-control" placeholder="Search...">
+          </div>
+        </div>
 
+        <div class="d-flex flex-column justify-content-center">
+          <a class="btn btn-success" href="javascript: void(0);">
+            + Add Tax Group
+          </a>
+        </div>
+
+      </div>
+
+      <br>
+      <nz-table #basicTable [nzData]="" class="kit__utils__table mb-4">
+        <thead>
+          <tr>
+            <th><strong>Tax Group</strong></th>
+            <th><strong>Tax 1</strong></th>
+            <th><strong>Tax 2</strong></th>
+            <th><strong>Tax 3</strong></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+
+            <td>
+
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
     </div>
   </div>
 </div>

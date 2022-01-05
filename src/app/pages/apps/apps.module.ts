@@ -38,6 +38,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
 import { InternalTransferComponent } from './internal-transfer/internal-transfer.component'
 import { ProductsComponent } from './products/products.component'
 import { CategoryComponent } from './category/category.component'
+import { TaxgroupComponent } from './taxgroup/taxgroup.component'
 import { AddcategoryComponent } from './addcategory/addcategory.component'
 import { PurchaseEntryComponent } from './purchase-entry/purchase-entry.component'
 import { VendorsComponent } from './vendors/vendors.component'
@@ -110,6 +111,7 @@ const COMPONENTS = [
     InternalTransferComponent,
     ProductsComponent,
     CategoryComponent,
+    TaxgroupComponent,
     AddcategoryComponent,
     PurchaseEntryComponent,
     VendorsComponent,
