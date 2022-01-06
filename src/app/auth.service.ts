@@ -522,19 +522,6 @@ export class AuthService {
     return this.http.get(this.base_url + 'Product/getvariants?CompanyId=' + CompanyId)
   }
 
-  getTax_l(CompanyId) {
-    return this.http.get(this.base_url + 'Product/getTaxgroup?CompanyId=' + CompanyId)
-    // return this.http.get(this.server_ip + ':8081/gettaxgroup')
-  }
-  addtaxgroup(taxgroup) {
-    return this.http.post(this.base_url + 'Product/addtaxgroup', taxgroup)
-    // return this.http.get(this.server_ip + ':8081/gettaxgroup')
-  }
-  updatetaxgroup(taxgroup) {
-    return this.http.post(this.base_url + 'Product/updatetaxgroup', taxgroup)
-    // return this.http.get(this.server_ip + ':8081/gettaxgroup')
-  }
-
   updatepreference(preferences) {
     return this.http.post(this.base_url + 'Preference/updatepricetype', preferences)
   }
@@ -717,13 +704,17 @@ export class AuthService {
     return this.http.get(this.base_url1 + 'PaymentType/getstorepaymenttype?StoreId=26')
   }
 
-  // MAster
+  // Master
   // 05-01-2022
-  GetTaxGrp() {
-    return this.http.get(this.base_url1 + 'TaxGroup/GetTaxGrp?CompanyId=1')
+  GetTaxGrp(CompanyId) {
+    return this.http.get(this.base_url1 + 'TaxGroup/GetTaxGrp?CompanyId=' + CompanyId)
   }
-
-  // getUsersale(companyId){
-  //   return this.http.get(this.base_url1 + 'Users/GetUsers?CompanyId=' + companyId)
-  // }
+  // Master
+  // 06-01-2022
+  AddTaxGrp(taxgroup) {
+    return this.http.post(this.base_url1 + 'TaxGroup/AddTaxGrp', taxgroup)
+  }
+  UpdateTaxGrp(taxgroup) {
+    return this.http.post(this.base_url1 + 'TaxGroup/UpdateTaxGrp', taxgroup)
+  }
 }
