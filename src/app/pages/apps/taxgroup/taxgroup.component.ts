@@ -73,7 +73,7 @@ export class TaxgroupComponent implements OnInit {
             tax2: 0,
             tax3: 0,
             companyId: this.loginfo.companyId,
-            isInclusive: '',
+            isInclusive: false,
           }
           this.gettax()
         })
@@ -88,7 +88,7 @@ export class TaxgroupComponent implements OnInit {
             tax2: 0,
             tax3: 0,
             companyId: this.loginfo.companyId,
-            isInclusive: '',
+            isInclusive: false,
           }
           this.gettax()
         })
