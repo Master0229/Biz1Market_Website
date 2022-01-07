@@ -513,11 +513,11 @@ export const getMenuData: any[] = [
   //       key: 'widgetsLists',
   //       url: '/widgets/lists',
   //     },
-  {
-    title: 'Tables',
-    key: 'widgetsTables',
-    url: '/widgets/tables',
-  },
+  // {
+  //   title: 'Tables',
+  //   key: 'widgetsTables',
+  //   url: '/widgets/tables',
+  // },
   //     {
   //       title: 'Charts',
   //       key: 'widgetsCharts',
@@ -542,23 +542,23 @@ export const getMenuData: any[] = [
   //     },
   //   ],
   // },
-  {
-    title: 'Tables',
-    key: 'tables',
-    icon: 'fe fe-grid',
-    children: [
-      {
-        title: 'Ant Design',
-        key: 'tablesAntd',
-        url: '/tables/antd',
-      },
-      {
-        title: 'Bootstrap',
-        key: 'tablesBootstrap',
-        url: '/tables/bootstrap',
-      },
-    ],
-  },
+  // {
+  //   title: 'Tables',
+  //   key: 'tables',
+  //   icon: 'fe fe-grid',
+  //   children: [
+  //     {
+  //       title: 'Ant Design',
+  //       key: 'tablesAntd',
+  //       url: '/tables/antd',
+  //     },
+  //     {
+  //       title: 'Bootstrap',
+  //       key: 'tablesBootstrap',
+  //       url: '/tables/bootstrap',
+  //     },
+  //   ],
+  // },
   // {
   //   title: 'Charts',
   //   key: 'charts',
@@ -581,33 +581,33 @@ export const getMenuData: any[] = [
   //     },
   //   ],
   // },
-  {
-    title: 'Icons',
-    key: 'icons',
-    icon: 'fe fe-star',
-    children: [
-      {
-        title: 'Feather Icons',
-        key: 'iconsFeatherIcons',
-        url: '/icons/feather-icons',
-      },
-      {
-        title: 'Fontawesome',
-        key: 'iconsFontawesome',
-        url: '/icons/fontawesome',
-      },
-      {
-        title: 'Linearicons Free',
-        key: 'iconsLineariconsFree',
-        url: '/icons/linearicons-free',
-      },
-      {
-        title: 'Icomoon Free',
-        key: 'iconsIcomoonFree',
-        url: '/icons/icomoon-free',
-      },
-    ],
-  },
+  // {
+  //   title: 'Icons',
+  //   key: 'icons',
+  //   icon: 'fe fe-star',
+  //   children: [
+  //     {
+  //       title: 'Feather Icons',
+  //       key: 'iconsFeatherIcons',
+  //       url: '/icons/feather-icons',
+  //     },
+  //     {
+  //       title: 'Fontawesome',
+  //       key: 'iconsFontawesome',
+  //       url: '/icons/fontawesome',
+  //     },
+  //     {
+  //       title: 'Linearicons Free',
+  //       key: 'iconsLineariconsFree',
+  //       url: '/icons/linearicons-free',
+  //     },
+  //     {
+  //       title: 'Icomoon Free',
+  //       key: 'iconsIcomoonFree',
+  //       url: '/icons/icomoon-free',
+  //     },
+  //   ],
+  // },
   // {
   //   category: true,
   //   title: 'Advanced',
