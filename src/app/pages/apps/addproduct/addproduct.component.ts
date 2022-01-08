@@ -155,7 +155,7 @@ export class AddproductComponent implements OnInit {
               product: this.product,
               variantcombinations: this.combinations,
             }).subscribe(data => {
-              // // console.log(data)
+              console.log(data)
               this.Auth.updateproductdb().subscribe(data2 => {
                 this.notification.success('Product Added', 'Product Added Successfully')
                 this.location.back()

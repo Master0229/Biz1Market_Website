@@ -268,6 +268,9 @@ export class AuthService {
         companyId,
     )
   }
+
+  // Internal Controller
+  // Master
   getorder(ordId) {
     return this.http.post(this.base_url1 + 'Internal/getOrderList', ordId)
   }
@@ -704,6 +707,7 @@ export class AuthService {
     return this.http.get(this.base_url1 + 'PaymentType/getstorepaymenttype?StoreId=26')
   }
 
+  // TaxGroup Controller
   // Master
   // 05-01-2022
   GetTaxGrp(CompanyId) {
