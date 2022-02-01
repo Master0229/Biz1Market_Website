@@ -72,6 +72,7 @@ export class InternalTransferComponent implements OnInit {
   selectedsupplieritem(item) {
     console.log('item', item)
     this.SuppliedById = item.id
+    // this.storeIdByInternal = item.id
   }
   searchsupplier = (text$: Observable<string>) =>
     text$.pipe(
@@ -79,7 +80,7 @@ export class InternalTransferComponent implements OnInit {
       map(term =>
         term === ''
           ? []
-          : this.stores.cusList
+          : this.stores.storeList
               .filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1)
               .slice(0, 10),
       ),
@@ -97,7 +98,7 @@ export class InternalTransferComponent implements OnInit {
       map(term =>
         term === ''
           ? []
-          : this.stores.cusList
+          : this.stores.storeList
               .filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1)
               .slice(0, 10),
       ),
@@ -149,7 +150,7 @@ export class InternalTransferComponent implements OnInit {
   isShown = true
   isTable = false
   ordNo = 0
-  storeId = 0
+  storeId = 56
   orderDate = ''
   CustomerAddressId = null
   CompanyId = 1
@@ -194,6 +195,9 @@ export class InternalTransferComponent implements OnInit {
   streId = 0
   isDisp = false
   numRecordsStr = 50
+  // orders: any = []
+  companyId = 1
+  numRecords = 50
   NewArr: any = []
   tableData = [
     {
@@ -251,13 +255,21 @@ export class InternalTransferComponent implements OnInit {
     this.getBarcodeProduct()
     // this.getcustomers();
     this.getStoreList()
-    this.getOrderList()
+    // this.getOrderList()
+    this.Getorderlist()
+    // this.deleterow()
+    // this.deleteOrder(this.getorderedList.Id)
+
     // this.products = JSON.parse(localStorage.getItem("Product"));
     this.products.forEach(product => {
       product.quantity = null
       product.tax = 0
       product.amount = 0
     })
+    // Queen 31-01-2022
+    this.orderkey = localStorage.getItem('orderkey')
+      ? JSON.parse(localStorage.getItem('orderkey'))
+      : { orderno: 1, timestamp: 0, GSTno: '' }
   }
   // this.location.back()
 
@@ -311,6 +323,9 @@ export class InternalTransferComponent implements OnInit {
     }
   }
   saveOrder() {
+    // this.order.OrderNo = this.orderkey.orderno
+    this.updateorderno()
+    this.order.OrderNo = this.orderkey.orderno
     this.order.StoreId = this.storeId
     this.order.BatchNo = this.batchno
     this.order.BillDate = moment().format('YYYY-MM-DD HH:MM A')
@@ -353,7 +368,8 @@ export class InternalTransferComponent implements OnInit {
       console.log(data)
       this.isShown = !this.isShown
       this.isTable = !this.isTable
-      this.getOrderList()
+      // this.getOrderList()
+      this.Getorderlist()
     })
   }
   internal() {
@@ -570,7 +586,7 @@ export class InternalTransferComponent implements OnInit {
       // this.OrdData = data;
       console.log('delete', data)
     })
-    this.getOrderList()
+    this.Getorderlist()
   }
   settotalprice(i, qty) {
     this.cartitems[i].amount = this.cartitems[i].Price * this.cartitems[i].Quantity
@@ -639,7 +655,7 @@ export class InternalTransferComponent implements OnInit {
   }
   selectedstoreitem(item) {
     console.log('item', item)
-    this.storeId = item.id
+    // this.StoreId = item.id
   }
   productbybarcode = []
   barcode = ''
@@ -691,15 +707,68 @@ export class InternalTransferComponent implements OnInit {
         reason => {},
       )
   }
-}
+  //queen
+  storeIdByInt: any
+  getorderedList: any = []
+  Getorderlist() {
+    this.Auth.getorderlist().subscribe(data => {
+      this.getorderedList = data
+      console.log(this.getorderedList)
+      // this.storeIdByInt = this.getorderedList.orders.SuppliedById
+      // console.log(this.storeIdByInt)
+      this.StoreByIdInternal(0)
+    })
+  }
+  compid: any
+  // Master
+  // 31-01-2022
+  StoreByIdInternal(storeid) {
+    this.Auth.getstoreIdInternal(storeid).subscribe(data => {
+      const stores = data['storeList']
+      this.getorderedList.orders.forEach(order => {
+        console.log(
+          order.SuppliedById,
+          stores.filter(x => x.id == order.SuppliedById),
+        )
+        order.supplier = stores.filter(x => x.id == order.SuppliedById)[0]?.name
+        order.receiver = stores.filter(x => x.id == order.OrderedById)[0]?.name
+      })
+    })
+  }
+  // selectedorderstore(item) {
+  //   console.log('item', item)
+  //   this.StoreId = item.id
+  // }
+  // selectedreceiverstore(item) {
+  //   console.log('item', item)
+  //   this.StoreId = item.id
+  // }
 
-//  <div class="modal-body" >
-// <div class="card lesson-border">
-//   <div class="card-body">
-//     <p class="card-text"  *ngFor="let ord of OrdData.order"><b>products: </b>{{ord.name}}</p>
-//   </div>
-// </div>
-// </div>
-// <div class="modal-footer">
-// <button type="button" class="btn btn-outline-dark" >Close</button>
-// </div>
+  // Queen 31-01-2022
+  orderkey = { orderno: 1, timestamp: 0, GSTno: '' }
+
+  updateorderno() {
+    this.orderkey.orderno++
+    localStorage.setItem('orderkey', JSON.stringify(this.orderkey))
+    // this.Auth.updateorderkey(this.orderkey).subscribe(data => { })
+    console.log(this.orderkey)
+  }
+  orderlogging(eventname) {
+    var logdata = {
+      event: eventname,
+      orderjson: JSON.stringify(this.order),
+      // ordertypeid: this.order.OrderTypeId,
+      orderno: this.orderkey.orderno,
+      timestamp: new Date().getTime(),
+    }
+    this.Auth.logorderevent(logdata).subscribe(data => {})
+  }
+  // Queen 01-02-2022
+  rowdelete: any
+  //   deleterow(){
+  //     this.Auth.deleteItem(this.getorderedList.Id).subscribe(data =>{
+  //       this.rowdelete = data
+  //       console.log('delete', this.rowdelete)
+  //     })
+  //   }
+}

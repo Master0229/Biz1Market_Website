@@ -45,12 +45,12 @@ export const getMenuData: any[] = [
     icon: 'fe fe-users',
     url: '/apps/customer',
   },
-  {
-    title: 'Internal Transfer',
-    key: 'appsInternalTransfer',
-    icon: 'fa fa-code-fork',
-    url: '/apps/internaltransfer',
-  },
+  // {
+  //   title: 'Internal Transfer',
+  //   key: 'appsInternalTransfer',
+  //   icon: 'fa fa-code-fork',
+  //   url: '/apps/internaltransfer',
+  // },
   {
     title: 'Setting',
     key: 'appsSetting',
@@ -160,6 +160,12 @@ export const getMenuData: any[] = [
     key: 'apps',
     icon: 'fe fe-truck',
     children: [
+      {
+        title: 'Internal Transfer',
+        key: 'appsInternalTransfer',
+        icon: 'fa fa-code-fork',
+        url: '/apps/internaltransfer',
+      },
       {
         title: 'Dispatch Items',
         key: 'appsDispatchItem',

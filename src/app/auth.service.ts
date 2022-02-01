@@ -17,17 +17,17 @@ export class AuthService {
   }
 
   registration(payload) {
-    return this.http.post(this.base_url + 'Login/Register', payload)
+    return this.http.post(this.base_url1 + 'Login/Register', payload)
   }
 
   login(payload) {
-    return this.http.post(this.base_url + 'Login/LoginCheck', payload)
+    return this.http.post(this.base_url1 + 'Login/LoginCheck', payload)
   }
   // getcustomers(compid) {
-  //   return this.http.get(this.base_url + 'Customer/GetCustomerList?CompanyId=' + compid)
+  //   return this.http.get(this.base_url1 + 'Customer/GetCustomerList?CompanyId=' + compid)
   // }
   addCustomers(payload) {
-    return this.http.post(this.base_url + 'Customer/addData', payload)
+    return this.http.post(this.base_url1 + 'Customer/addData', payload)
   }
 
   getusers(storeid, companyid) {
@@ -37,7 +37,7 @@ export class AuthService {
   }
   getstoredata(companyid, storeid, pricetype) {
     return this.http.get(
-      this.base_url +
+      this.base_url1 +
         `Login/getStoreData?CompanyId=${companyid}&storeid=${storeid}&pricetype=${pricetype}`,
     )
   }
@@ -80,26 +80,26 @@ export class AuthService {
     return this.http.get(`http://${ip}:8081/join`)
   }
   getKotgroups() {
-    return this.http.get(this.base_url + 'Product/getKotGroup')
+    return this.http.get(this.base_url1 + 'Product/getKotGroup')
   }
   getvariantgroups_l(CompanyId) {
-    return this.http.get(this.base_url + 'Product/getvariantgroups?CompanyId=1')
+    return this.http.get(this.base_url1 + 'Product/getvariantgroups?CompanyId=1')
   }
   addVariants_l(variant) {
-    return this.http.post(this.base_url + 'Product/addvariant', variant)
+    return this.http.post(this.base_url1 + 'Product/addvariant', variant)
   }
 
   addVariantGroups_l(variantgroup) {
-    return this.http.post(this.base_url + 'Product/addvariantgroup', variantgroup)
+    return this.http.post(this.base_url1 + 'Product/addvariantgroup', variantgroup)
   }
   updateVariantGroups_l(optiongroup) {
-    return this.http.post(this.base_url + 'Product/updatevariantgroup', optiongroup)
+    return this.http.post(this.base_url1 + 'Product/updatevariantgroup', optiongroup)
   }
   updateVariant_l(option) {
-    return this.http.post(this.base_url + 'Product/updatevariant', option)
+    return this.http.post(this.base_url1 + 'Product/updatevariant', option)
   }
   // getProduct(CompanyId,StoreId){
-  //   return this.http.get(this.base_url + 'Product/getProduct?CompanyId=1&StoreId=8' )
+  //   return this.http.get(this.base_url1 + 'Product/getProduct?CompanyId=1&StoreId=8' )
   // }
   getBarcodeProduct(CompanyId, storeId) {
     return this.http.get(
@@ -120,48 +120,48 @@ export class AuthService {
     return this.http.get(this.base_url1 + 'Product/getmasterproducts?CompanyId=' + companyid)
   }
   getproductbyid(id) {
-    return this.http.get(this.base_url + 'Product/getproductbyid?ProductId=' + id)
+    return this.http.get(this.base_url1 + 'Product/getproductbyid?ProductId=' + id)
   }
   addproduct_l(product) {
-    return this.http.post(this.base_url + 'Product/addProduct?userid=20', product)
+    return this.http.post(this.base_url1 + 'Product/addProduct?userid=20', product)
   }
   updateproduct_l(product) {
-    return this.http.post(this.base_url + 'Product/updateProduct?userid=20', product)
+    return this.http.post(this.base_url1 + 'Product/updateProduct?userid=20', product)
   }
   getcategories(companyid, type) {
     return this.http.get(
-      this.base_url + `Category/getcategories?CompanyId=${companyid}&type=${type}`,
+      this.base_url1 + `Category/getcategories?CompanyId=${companyid}&type=${type}`,
     )
   }
   addcategories(category) {
-    return this.http.post(this.base_url + 'Category/addcategory', category)
+    return this.http.post(this.base_url1 + 'Category/addcategory', category)
   }
   updatecategory(category) {
-    return this.http.post(this.base_url + 'Category/updatecategory', category)
+    return this.http.post(this.base_url1 + 'Category/updatecategory', category)
   }
   getcategorybyid(id) {
-    return this.http.get(this.base_url + 'Category/getcategorybyid?CategoryId=' + id)
+    return this.http.get(this.base_url1 + 'Category/getcategorybyid?CategoryId=' + id)
   }
   getcategoryvariants(id) {
-    return this.http.get(this.base_url + 'Product/getcategoryvariants?categoryid=' + id)
+    return this.http.get(this.base_url1 + 'Product/getcategoryvariants?categoryid=' + id)
   }
   getvendors(compid) {
-    return this.http.get(this.base_url + 'Vendor/getVendorList?CompanyId=' + compid)
+    return this.http.get(this.base_url1 + 'Vendor/getVendorList?CompanyId=' + compid)
   }
   addvendors(vendor) {
     return this.http.post(this.base_url1 + 'Vendor/addvendors', vendor)
   }
   updatevendors(vendor) {
-    return this.http.post(this.base_url + 'Vendor/updatevendors', vendor)
+    return this.http.post(this.base_url1 + 'Vendor/updatevendors', vendor)
   }
   getVendorListbyid(id) {
-    return this.http.get(this.base_url + 'Vendor/getVendorListbyid?vendorid=' + id)
+    return this.http.get(this.base_url1 + 'Vendor/getVendorListbyid?vendorid=' + id)
   }
 
   ///////////////////////////////////////////////NEDB////////////////////////////////////////////////////////
 
   getTax(CompanyId) {
-    return this.http.get(this.base_url + 'Product/getTaxgroup?CompanyId=1')
+    return this.http.get(this.base_url1 + 'Product/getTaxgroup?CompanyId=1')
     // return this.http.get(this.server_ip + ':8081/gettaxgroup')
   }
   getProductType() {
@@ -180,27 +180,27 @@ export class AuthService {
     return this.http.post(this.server_ip + ':8081/addmasterproduct?userid=13', product)
   }
   getvariants(CompanyId) {
-    // return this.http.get(this.base_url + 'Product/getvariants?CompanyId=1')
+    // return this.http.get(this.base_url1 + 'Product/getvariants?CompanyId=1')
     return this.http.get(this.server_ip + ':8081/masteroption?CompanyId=1')
   }
   addVariants(variant) {
-    // return this.http.post(this.base_url + 'Product/addvariant',variant)
+    // return this.http.post(this.base_url1 + 'Product/addvariant',variant)
     return this.http.post(this.server_ip + ':8081/addmasteroption', variant)
   }
   getvariantgroups(CompanyId) {
-    // return this.http.get(this.base_url + 'Product/getvariantgroups?CompanyId=1')
+    // return this.http.get(this.base_url1 + 'Product/getvariantgroups?CompanyId=1')
     return this.http.get(this.server_ip + ':8081/masteroptiongroup?CompanyId=1')
   }
   addVariantGroups(variantgroup) {
-    // return this.http.post(this.base_url + 'Product/addvariantgroup',variantgroup)
+    // return this.http.post(this.base_url1 + 'Product/addvariantgroup',variantgroup)
     return this.http.post(this.server_ip + ':8081/addmasteroptiongroup', variantgroup)
   }
   updateVariant(option) {
-    // return this.http.post(this.base_url + 'Product/updatevariant',variant)
+    // return this.http.post(this.base_url1 + 'Product/updatevariant',variant)
     return this.http.post(this.server_ip + ':8081/updatemasteroption', option)
   }
   updateVariantGroups(optiongroup) {
-    // return this.http.post(this.base_url + 'Product/updatevariantgroup',variantgroup)
+    // return this.http.post(this.base_url1 + 'Product/updatevariantgroup',variantgroup)
     return this.http.post(this.server_ip + ':8081/updatemasteroptiongroup', optiongroup)
   }
   updateProduct(product) {
@@ -268,9 +268,6 @@ export class AuthService {
         companyId,
     )
   }
-
-  // Internal Controller
-  // Master
   getorder(ordId) {
     return this.http.post(this.base_url1 + 'Internal/getOrderList', ordId)
   }
@@ -463,13 +460,13 @@ export class AuthService {
     return this.http.get(this.server_ip + ':8081/getorders?typeid=' + typeid)
   }
   // saveorder(order) {
-  //   return this.http.post(this.base_url + 'Sale/saveorder', order)
+  //   return this.http.post(this.base_url1 + 'Sale/saveorder', order)
   // }
   deleteorderfromnedb(orderid, stockBatches) {
     return this.http.post(this.server_ip + ':8081/deleteorder?_id=' + orderid, stockBatches)
   }
   savepurchase(order) {
-    return this.http.post(this.base_url + 'Purchase/Purchase', order)
+    return this.http.post(this.base_url1 + 'Purchase/Purchase', order)
   }
   updatepurchaseorder(order) {
     return this.http.post(this.server_ip + ':8081/updatepurchaseorder', order)
@@ -492,7 +489,7 @@ export class AuthService {
     return this.http.get(this.base_url1 + 'Product/UpdateAct?Id=' + Id + '&active=' + active)
   }
   getProduct(id, compId) {
-    return this.http.get(this.base_url + 'Product/GetById?id=' + id + '&compId=' + compId)
+    return this.http.get(this.base_url1 + 'Product/GetById?id=' + id + '&compId=' + compId)
   }
   getloginfo() {
     return this.http.get(this.server_ip + ':8081/getloginfo')
@@ -515,18 +512,18 @@ export class AuthService {
     return this.http.post(this.server_ip + ':8081/batchproduct', batchentry)
   }
   getbatchEntry(batches, userid) {
-    return this.http.post(this.base_url + 'Product/batchEntry?userid=' + userid, batches)
+    return this.http.post(this.base_url1 + 'Product/batchEntry?userid=' + userid, batches)
   }
   // getreceipt(){
   //   return this.http.get(this.base_url1 +'Receipt/GetReceipts')
   // }
 
   getvariant_l(CompanyId) {
-    return this.http.get(this.base_url + 'Product/getvariants?CompanyId=' + CompanyId)
+    return this.http.get(this.base_url1 + 'Product/getvariants?CompanyId=' + CompanyId)
   }
 
   updatepreference(preferences) {
-    return this.http.post(this.base_url + 'Preference/updatepricetype', preferences)
+    return this.http.post(this.base_url1 + 'Preference/updatepricetype', preferences)
   }
   getvendororders(
     companyid,
@@ -547,36 +544,36 @@ export class AuthService {
   }
 
   getvendororderproduct(orderId) {
-    return this.http.get(this.base_url + `Purchase/getVendorOrderProduct?orderId=${orderId}`)
+    return this.http.get(this.base_url1 + `Purchase/getVendorOrderProduct?orderId=${orderId}`)
   }
 
   updatePurchase(order) {
-    return this.http.post(this.base_url + 'Purchase/updatePurchase', order)
+    return this.http.post(this.base_url1 + 'Purchase/updatePurchase', order)
   }
 
   updatereceivedItem(orderid, userid, order) {
     return this.http.post(
-      this.base_url + `Purchase/updatereceiveItem?orderid=${orderid}&userid=${userid}`,
+      this.base_url1 + `Purchase/updatereceiveItem?orderid=${orderid}&userid=${userid}`,
       order.Items,
     )
   }
   directreceivedpurchase(orderid, userid, order) {
     return this.http.post(
-      this.base_url + `Purchase/directReceiveItem?orderid=${orderid}&userid=${userid}`,
+      this.base_url1 + `Purchase/directReceiveItem?orderid=${orderid}&userid=${userid}`,
       order,
     )
   }
   getreceivedorders(companyid, storeid) {
     return this.http.get(
-      this.base_url + `Purchase/getReceivedOrders?companyid=${companyid}&storeid=${storeid}`,
+      this.base_url1 + `Purchase/getReceivedOrders?companyid=${companyid}&storeid=${storeid}`,
     )
   }
   getvendorreceivedorders(orderId) {
-    return this.http.get(this.base_url + `Purchase/getVendorReceivedOrder?orderId=${orderId}`)
+    return this.http.get(this.base_url1 + `Purchase/getVendorReceivedOrder?orderId=${orderId}`)
   }
   updatereceivedPurchase(orderid, userid, order) {
     return this.http.post(
-      this.base_url + `Purchase/UpdateReceiveOrder?orderid=${orderid}&userid=${userid}`,
+      this.base_url1 + `Purchase/UpdateReceiveOrder?orderid=${orderid}&userid=${userid}`,
       order,
     )
   }
@@ -660,7 +657,7 @@ export class AuthService {
     return this.http.get(this.base_url1 + 'Customer/AddCustomer')
   }
   updateCustomer(payload) {
-    return this.http.put(this.base_url + 'Customer/updateData', payload)
+    return this.http.put(this.base_url1 + 'Customer/updateData', payload)
   }
   logorderevent(logdata) {
     return this.http.post(this.dburl + 'logorderevent', logdata)
@@ -707,7 +704,6 @@ export class AuthService {
     return this.http.get(this.base_url1 + 'PaymentType/getstorepaymenttype?StoreId=26')
   }
 
-  // TaxGroup Controller
   // Master
   // 05-01-2022
   GetTaxGrp(CompanyId) {
@@ -720,5 +716,32 @@ export class AuthService {
   }
   UpdateTaxGrp(taxgroup) {
     return this.http.post(this.base_url1 + 'TaxGroup/UpdateTaxGrp', taxgroup)
+  }
+  //Queen 29-01-2022
+  getorderlist() {
+    return this.http.get(this.base_url1 + 'Internal/getOrderList?companyId=1' + '&numRecords=50')
+  }
+
+  // Queen 31-01-2022
+  getstoreIdInternal(Id) {
+    return this.http.get(this.base_url1 + 'Internal/GetstorebyId?CompanyId=1&Id=' + Id)
+  }
+
+  // Master
+  // 28-01-2022
+
+  Categoryupdate(Id, active, CompanyId) {
+    return this.http.get(
+      this.base_url1 +
+        'Category/UpdatecategoryAct?Id=' +
+        Id +
+        '&active=' +
+        active +
+        '&CompanyId=' +
+        CompanyId,
+    )
+  }
+  catactive(companyid) {
+    return this.http.get(this.base_url1 + 'Category/Index?companyid=' + companyid)
   }
 }
