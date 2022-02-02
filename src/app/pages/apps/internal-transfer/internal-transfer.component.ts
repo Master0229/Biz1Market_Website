@@ -253,12 +253,8 @@ export class InternalTransferComponent implements OnInit {
     this.order = new OrderModule(2)
     this.products = []
     this.getBarcodeProduct()
-    // this.getcustomers();
     this.getStoreList()
-    // this.getOrderList()
     this.Getorderlist()
-    // this.deleterow()
-    // this.deleteOrder(this.getorderedList.Id)
 
     // this.products = JSON.parse(localStorage.getItem("Product"));
     this.products.forEach(product => {
@@ -576,17 +572,17 @@ export class InternalTransferComponent implements OnInit {
     this.order.OrderDetail.splice(index, 1)
     this.order.setbillamount()
   }
-  deleteOrder(id) {
-    console.log('delete', id)
-    this.NewArr.push({
-      companyId: this.CompanyId,
-      orderId: id,
-    })
-    this.Auth.deleteItem(this.NewArr).subscribe(data => {
-      // this.OrdData = data;
+  deleteOrder(Id) {
+    console.log('delete', Id)
+    console.log(this.NewArr)
+    this.Auth.deleteItem({
+      companyId: 1,
+      orderId: Id,
+    }).subscribe(data => {
+      this.getorderedList = data
       console.log('delete', data)
+      this.Getorderlist()
     })
-    this.Getorderlist()
   }
   settotalprice(i, qty) {
     this.cartitems[i].amount = this.cartitems[i].Price * this.cartitems[i].Quantity
@@ -712,24 +708,34 @@ export class InternalTransferComponent implements OnInit {
   getorderedList: any = []
   Getorderlist() {
     this.Auth.getorderlist().subscribe(data => {
-      this.getorderedList = data
+      this.getorderedList = data['orders']
+      this.tabledata = this.getorderedList
       console.log(this.getorderedList)
-      // this.storeIdByInt = this.getorderedList.orders.SuppliedById
-      // console.log(this.storeIdByInt)
       this.StoreByIdInternal(0)
     })
   }
+  tabledata: []
+  term: string = ''
+  filtersearch(): void {
+    this.tabledata = this.term
+      ? this.getorderedList.filter(x =>
+          x.description.toLowerCase().includes(this.term.toLowerCase()),
+        )
+      : this.getorderedList
+    console.log(this.tabledata)
+  }
+
   compid: any
   // Master
   // 31-01-2022
   StoreByIdInternal(storeid) {
     this.Auth.getstoreIdInternal(storeid).subscribe(data => {
       const stores = data['storeList']
-      this.getorderedList.orders.forEach(order => {
-        console.log(
-          order.SuppliedById,
-          stores.filter(x => x.id == order.SuppliedById),
-        )
+      this.getorderedList.forEach(order => {
+        // console.log(
+        //   order.SuppliedById,
+        //   stores.filter(x => x.id == order.SuppliedById),
+        // )
         order.supplier = stores.filter(x => x.id == order.SuppliedById)[0]?.name
         order.receiver = stores.filter(x => x.id == order.OrderedById)[0]?.name
       })
@@ -757,18 +763,9 @@ export class InternalTransferComponent implements OnInit {
     var logdata = {
       event: eventname,
       orderjson: JSON.stringify(this.order),
-      // ordertypeid: this.order.OrderTypeId,
       orderno: this.orderkey.orderno,
       timestamp: new Date().getTime(),
     }
     this.Auth.logorderevent(logdata).subscribe(data => {})
   }
-  // Queen 01-02-2022
-  rowdelete: any
-  //   deleterow(){
-  //     this.Auth.deleteItem(this.getorderedList.Id).subscribe(data =>{
-  //       this.rowdelete = data
-  //       console.log('delete', this.rowdelete)
-  //     })
-  //   }
 }
