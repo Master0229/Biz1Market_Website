@@ -572,6 +572,7 @@ export class InternalTransferComponent implements OnInit {
     this.order.OrderDetail.splice(index, 1)
     this.order.setbillamount()
   }
+
   deleteOrder(Id) {
     console.log('delete', Id)
     console.log(this.NewArr)
@@ -767,5 +768,10 @@ export class InternalTransferComponent implements OnInit {
       timestamp: new Date().getTime(),
     }
     this.Auth.logorderevent(logdata).subscribe(data => {})
+  }
+
+  getintordId: any = []
+  editinternalord(id) {
+    console.log(id)
   }
 }

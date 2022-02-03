@@ -160,10 +160,10 @@ export class AuthService {
 
   ///////////////////////////////////////////////NEDB////////////////////////////////////////////////////////
 
-  getTax(CompanyId) {
-    return this.http.get(this.base_url1 + 'Product/getTaxgroup?CompanyId=1')
-    // return this.http.get(this.server_ip + ':8081/gettaxgroup')
-  }
+  // getTax(CompanyId) {
+  //   return this.http.get(this.base_url1 + 'Product/getTaxgroup?CompanyId=1')
+  //   // return this.http.get(this.server_ip + ':8081/gettaxgroup')
+  // }
   getProductType() {
     return this.http.get(this.base_url1 + 'Product/getProductType')
     // return this.http.get(this.server_ip + ':8081/getproducttype')

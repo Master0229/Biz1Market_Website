@@ -64,7 +64,7 @@ export class AddproductComponent implements OnInit {
     this.getCategories()
   }
   gettax() {
-    this.Auth.getTax(this.CompanyId).subscribe(data => {
+    this.Auth.GetTaxGrp(this.CompanyId).subscribe(data => {
       this.taxgroups = data
       this.product.taxGroupId = this.taxgroups[0].id
       // console.log(this.taxgroups);

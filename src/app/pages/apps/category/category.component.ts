@@ -184,7 +184,7 @@ export class CategoryComponent implements OnInit {
   }
 
   gettax() {
-    this.Auth.getTax(this.loginfo.companyId).subscribe(data => {
+    this.Auth.GetTaxGrp(this.loginfo.companyId).subscribe(data => {
       this.taxgroups = data
       console.log(this.taxgroups)
     })
