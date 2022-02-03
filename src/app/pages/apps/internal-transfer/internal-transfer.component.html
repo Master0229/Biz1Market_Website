@@ -112,17 +112,14 @@
             </tbody>
           </nz-table>
         </div>
-
       </div>
     </div>
-
   </div>
 </div>
 <div>
-  <div *ngIf="isShown" class="d-flex text-right">
-
-    <div class="card-header card-header-flex">
-      <div class="d-flex flex-column justify-content-center mr-auto">
+  <div *ngIf="isShown" class="container">
+    <div class="row">
+      <div class="col">
         <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
           <input type="text" nz-input placeholder="input search text" [(ngModel)]="term" (input)="filtersearch()" />
         </nz-input-group>
@@ -130,7 +127,7 @@
           <button nz-button nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
         </ng-template>
       </div>
-      <div class="d-flex flex-column justify-content-center">
+      <div class="col-6">
         <a class="btn btn-success" href="javascript: void(0);" (click)="internal()">
           + ORDER
         </a>
@@ -187,10 +184,10 @@
               slot="actions">
               <i class="fe fa-lg fe-trash-2"></i>
             </a>
-            <a routerLink="/apps/editinternal/{{ord.id}}" href="javascript: void(0);" class="btn btn-sm btn-light ">
+            <a routerLink="/apps/editinternal/{{ord.Id}}" href="javascript: void(0);" class="btn btn-sm btn-light ">
               <i class="fe fa-lg fe-edit "></i>
             </a>
-            <a routerLink="/apps/dispatch/{{ord.id}}" href="javascript: void(0);" class="btn btn-sm btn-light ">
+            <a routerLink="/apps/dispatch/{{ord.Id}}" href="javascript: void(0);" class="btn btn-sm btn-light ">
               <i class="fa fa-lg fa-truck" aria-hidden="true"></i>
             </a>
           </div>
@@ -203,7 +200,6 @@
       <button class="btn btn-success btn-sm mx-100 w-30 pull-right" *ngIf="isShown" (click)="locback()">Go
           Back</button>
   </div> -->
-
 </div>
 
 <ng-template #contentdetail1 let-modal>

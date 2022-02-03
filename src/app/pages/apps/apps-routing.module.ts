@@ -158,11 +158,11 @@ const routes: Routes = [
     component: DispatchComponent,
     data: { title: 'Dispatch App' },
   },
-  // {
-  //   path: 'editinternal/:id',
-  //   component: EditInternalOrderComponent,
-  //   data: { title: 'EditInternal App'},
-  // },
+  {
+    path: 'editinternal/:id',
+    component: EditInternalOrderComponent,
+    data: { title: 'EditInternal App' },
+  },
   {
     path: 'credit',
     component: CreditComponent,
