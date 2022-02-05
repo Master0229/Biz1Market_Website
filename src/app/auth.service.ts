@@ -626,7 +626,7 @@ export class AuthService {
   GetReceipts(Storeid, fromdate, todate, invoice) {
     return this.http.get(
       this.base_url1 +
-        'Receipt/GetReceipt?Storeid=' +
+        'Receipt/Gettestdata?Storeid=' +
         Storeid +
         '&fromdate=' +
         fromdate +
@@ -743,5 +743,8 @@ export class AuthService {
   }
   catactive(companyid) {
     return this.http.get(this.base_url1 + 'Category/Index?companyid=' + companyid)
+  }
+  gettransaction(OrderId) {
+    return this.http.get(this.base_url1 + 'Receipt/getByOrderId?OrderId=' + OrderId)
   }
 }

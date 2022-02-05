@@ -1,4 +1,12 @@
-import { Component, OnInit, TemplateRef, ViewChild, ElementRef, HostListener, Input } from '@angular/core'
+import {
+  Component,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ElementRef,
+  HostListener,
+  Input,
+} from '@angular/core'
 import * as moment from 'moment'
 import { FormControl, Validators } from '@angular/forms'
 import { NzModalService } from 'ng-zorro-antd/modal'
@@ -9,6 +17,7 @@ import { Observable } from 'rxjs'
 import { debounceTime, map } from 'rxjs/operators'
 import { OrderItemModule, OrderModule, AdditionalCharge, Transaction } from './sale.module'
 import { SyncService } from 'src/app/services/sync/sync.service'
+import { PrintService } from 'src/app/services/print/print.service'
 
 @Component({
   selector: 'app-sale',
@@ -22,43 +31,34 @@ export class SaleComponent implements OnInit {
   @ViewChild('disc', { static: false }) public discel: TemplateRef<any>
   @ViewChild('productautocomplete', { static: false }) public productinput: TemplateRef<any>
   @ViewChild('scrollframe', { static: false }) scrollFrame: ElementRef
-  // @ViewChild('cardnumber', { static: false }) cardnumber: ElementRef;
   buffer = ''
   model: any = 'QWERTY'
   order: OrderModule
   paymenttypeid = 1
   isuppercase: boolean = false
   OrderNo = 0
-  StoreId = 26
-  companyId = 1
-  loginfo: any
+  loginfo
   isDisable = false
   charges = []
   deliverydate
   deliverytime
-  // preorders: any = []
-  // ordercount = {
-  //   '2': { '-5': 0, '5': 0, '-1': 0, '-2': 0 },
-  //   '3': { '-5': 0, '5': 0, '-1': 0, '-2': 0 },
-  //   '4': { '-5': 0, '5': 0, '-1': 0, '-2': 0 },
-  // }
   transactionlist: Array<Transaction> = null
   issplitpayment: boolean = false
-  orderstatus = {
-    '-1': { name: 'Cancelled' },
-    '0': { name: 'Placed' },
-    '1': { name: 'Accepted' },
-    '2': { name: 'Preparing' },
-    '3': { name: 'Food Ready' },
-    '4': { name: 'Dispatched' },
-    '5': { name: 'Delivered' },
-  }
+  name: any
+  phoneNo: any
+  city: any
+  address: any
+  OrderedDateTime: any
+  preferences = { ShowTaxonBill: true }
+  AdditionalCharges: any
+  Total: any
+  CompanyId: any
+  StoreId: any
 
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
     let data = this.buffer || ''
     if (event.key !== 'Enter' && event.key !== 'Shift') {
-      // barcode ends with enter -key
       if (this.isuppercase) {
         data += event.key.toUpperCase()
         this.isuppercase = false
@@ -108,7 +108,6 @@ export class SaleComponent implements OnInit {
       value: '+982',
     },
   ]
-  // temporaryItem = { Id: 0, quantity: null, tax: 0, amount: 0, price: 0, Tax1: 0, Tax2: 0, barcodeId: 0 };
   temporaryItem: any = { DiscAmount: 0, Quantity: null, DiscPercent: 0 }
   barcodeItem = { quantity: null, tax: 0, amount: 0, price: 0, Tax1: 0, Tax2: 0 }
   barcodemode: boolean = false
@@ -123,7 +122,6 @@ export class SaleComponent implements OnInit {
   }
   @Input() sectionid: number = 0
   customers: any = []
-  // quantityfc = new FormControl('', [Validators.required, Validators.min(1)]);
   search = (text$: Observable<string>) =>
     text$.pipe(
       debounceTime(200),
@@ -131,13 +129,13 @@ export class SaleComponent implements OnInit {
         term === ''
           ? []
           : this.groupedProducts
-            .filter(
-              v =>
-                (v.product.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
-                  v.barCode?.toLowerCase().indexOf(term.toLowerCase()) > -1) &&
-                v.quantity > 0,
-            )
-            .slice(0, 10),
+              .filter(
+                v =>
+                  (v.product.toLowerCase().indexOf(term.toLowerCase()) > -1 ||
+                    v.barCode?.toLowerCase().indexOf(term.toLowerCase()) > -1) &&
+                  v.quantity > 0,
+              )
+              .slice(0, 10),
       ),
     )
 
@@ -149,22 +147,23 @@ export class SaleComponent implements OnInit {
     private notification: NzNotificationService,
     private sync: SyncService,
     config: NgbModalConfig,
+    private printservice: PrintService,
   ) {
     config.backdrop = 'static'
     config.keyboard = false
-    this.user = JSON.parse(localStorage.getItem("user"))
+    this.user = JSON.parse(localStorage.getItem('user'))
   }
-  // getErrorMessage() {
-  //   if (this.quantityfc.hasError('required')) {
-  //     return "Quantity can't be Empty";
-  //   }
-
-  //   return this.quantityfc.hasError('min') ? 'Quantity should be greater than 0' : '';
-  // }
 
   orderkey = { orderno: 1, timestamp: 0, GSTno: '' }
 
   ngOnInit(): void {
+    this.Auth.getdbdata(['loginfo', 'printersettings']).subscribe(data => {
+      this.loginfo = data['loginfo'][0]
+      this.printersettings = data['printersettings'][0]
+      this.CompanyId = this.loginfo.CompanyId
+      this.StoreId = this.loginfo.StoreId
+      console.log(this.loginfo)
+    })
     this.orderkey = localStorage.getItem('orderkey')
       ? JSON.parse(localStorage.getItem('orderkey'))
       : { orderno: 1, timestamp: 0, GSTno: '' }
@@ -190,7 +189,7 @@ export class SaleComponent implements OnInit {
         phoneNo: '',
         email: '',
         address: '',
-        companyId: this.companyId,
+        companyId: this.CompanyId,
         datastatus: '',
       }
     })
@@ -199,7 +198,6 @@ export class SaleComponent implements OnInit {
   updateorderno() {
     this.orderkey.orderno++
     localStorage.setItem('orderkey', JSON.stringify(this.orderkey))
-    // this.Auth.updateorderkey(this.orderkey).subscribe(data => { })
     console.log(this.orderkey)
   }
 
@@ -222,7 +220,7 @@ export class SaleComponent implements OnInit {
       orderno: this.orderkey.orderno,
       timestamp: new Date().getTime(),
     }
-    this.Auth.logorderevent(logdata).subscribe(data => { })
+    this.Auth.logorderevent(logdata).subscribe(data => {})
   }
 
   createorder(ordertypeid) {
@@ -237,7 +235,6 @@ export class SaleComponent implements OnInit {
       })
     }
     this.order.StoreId = this.loginfo.StoreId
-    // this.order.DeliveryStoreId = this.loginfo.StoreId
     this.orderlogging('create_order')
     this.show = false
     this.sectionid = 2
@@ -248,40 +245,13 @@ export class SaleComponent implements OnInit {
   }
 
   groupProduct() {
-    // var res = this.products.reduce((groups, currentValue) => {
-    //   if (groups.indexOf(currentValue.barcodeId) === -1) {
-    //     groups.push(currentValue.barcodeId);
-    //   }
-    //   return groups;
-    // }, []).map((barcodeId,createdDate,isInclusive,maxqty,product,productId,quantity,stockBatchId,tax1,tax2,tax3,barCode) => {
-    //   return {
-    //     barcodeId: barcodeId,
-    //     createdDate:createdDate,
-    //     isInclusive:isInclusive,
-    //     maxqty:maxqty,
-    //     product:product,
-    //     productId:productId,
-    //     quantity:quantity,
-    //     stockBatchId:stockBatchId,
-    //     tax1:tax1,
-    //     tax2:tax2,
-    //     tax3:tax3,
-    //     barCode:barCode,
-    //     price: this.products.filter((_el) => {
-    //       return _el.barcodeId === barcodeId;
-    //     }).map((_el) => { return _el.price; })
-    //   }
-    // });
-    // console.log(res)
     var helper = {}
     this.groupedProducts = this.products.reduce((r, o) => {
       var key = o.barcodeId + '-'
-
       if (!helper[key]) {
         helper[key] = Object.assign({}, o) // create a copy of o
         r.push(helper[key])
       }
-
       return r
     }, [])
 
@@ -308,23 +278,14 @@ export class SaleComponent implements OnInit {
     // }
   }
 
-
   getcustomers() {
     this.Auth.getcustomers().subscribe(data => {
       this.customers = data
       console.log(data)
-      // for(var key in this.order.CustomerDetails) {
-      //   this.order.CustomerDetails[key] = this.customers[key.toLowerCase()]
-      // // }
-      // console.log(this.order.CustomerDetails)
     })
   }
   savedata() {
-    // if (this.order.CustomerDetails.datastatus == 'new') {
     this.addcustomer()
-    // } else if (this.order.CustomerDetails.datastatus == 'old') {
-    //   this.updatecustomer();
-    // }
   }
   updatecustomer() {
     Object.keys(this.order.CustomerDetails).forEach(key => {
@@ -332,18 +293,14 @@ export class SaleComponent implements OnInit {
         key
       ]
     })
-
     this.Auth.updateCustomerdb(this.customerdetails).subscribe(
       data => {
-        // console.log(data);
         this.notification.success(
           'Customer Updated!',
           `${this.order.CustomerDetails.Name} updated successfully.`,
         )
       },
-      error => {
-        // console.log(error)
-      },
+      error => {},
       () => {
         this.getcustomers()
       },
@@ -359,42 +316,29 @@ export class SaleComponent implements OnInit {
     })
     this.Auth.addCustomerdb(this.customerdetails).subscribe(
       data => {
-        // console.log(data);
-        this.notification.success(
-          'Customer Added!',
-          `${this.order.CustomerDetails.Name} added successfully.`,
-        )
-        this.order.CustomerDetails.datastatus = 'old'
+        // this.notification.success(
+        //   'Customer Added!',
+        //   `${this.order.CustomerDetails.Name} added successfully.`,
+        // )
+        // this.order.CustomerDetails.datastatus = 'old'
       },
-      error => {
-        // console.log(error)
-      },
+      error => {},
       () => {
         this.getcustomers()
       },
     )
   }
 
-
   // Get Customers
   private async getCustomer() {
-    // Sleep thread for 3 seconds
-    // console.log(this.order.CustomerDetails.phoneNo)
-    // console.log(this.customers)
     this.order.CustomerDetails.datastatus = 'loading'
-    // await this.delay(3000);
-    // console.log(this.customers)
     if (this.customers.some(x => x.phoneNo == this.order.CustomerDetails.PhoneNo)) {
       var obj = this.customers.filter(x => x.phoneNo == this.order.CustomerDetails.PhoneNo)[0]
       console.log(obj)
       this.order.CustomerId = obj.id
-      // Object.keys(obj).forEach(element => {
-      //   this.order.CustomerDetails[element] = obj[element]
-      // });
       Object.keys(this.order.CustomerDetails).forEach(key => {
         this.order.CustomerDetails[key] = obj[key.charAt(0).toLowerCase() + key.slice(1)]
       })
-      // if (!this.order.CustomerDetails.Id) this.order.CustomerDetails.Id == 0
       console.log(this.order.CustomerDetails)
       this.order.CustomerDetails.datastatus = 'old'
     } else {
@@ -406,9 +350,6 @@ export class SaleComponent implements OnInit {
   }
   scrollToBottom(): void {
     var el = document.getElementsByClassName('ant-table-body')[0]
-    // console.log(el.scrollHeight)
-    // this.scrollContainer = this.scrollFrame.nativeElement;
-    // console.log(this.scrollContainer, this.scrollFrame)
     el.scroll({
       top: el.scrollHeight + 1000,
       left: 0,
@@ -422,32 +363,11 @@ export class SaleComponent implements OnInit {
     )
   }
   fieldselect(event) {
-    // console.log(event)
-    // console.log(event.element.nativeElement.id)
     var product = this.products.filter(x => x.barcodeId == +event.element.nativeElement.id)[0]
     this.inputValue = product.product
-    // document.getElementById("productautocomplete").nodeValue = product.Product;
     this.temporaryItem = product
   }
-  // addItem() {
-  //   this.temporaryItem.amount = this.temporaryItem.price * this.temporaryItem.quantity
-  //   this.temporaryItem.tax = (this.temporaryItem.Tax1 + this.temporaryItem.Tax2) * this.temporaryItem.amount / 100
-  //   this.temporaryItem.amount = +this.temporaryItem.amount.toFixed(2)
-  //   // this.temporaryItem.totalprice = +(this.temporaryItem.price * this.temporaryItem.quantity).toFixed(2)
-  //   if (this.cartitems.some(x => x.barcodeId == this.temporaryItem["barcodeId"])) {
-  //     this.cartitems.filter(x => x.barcodeId == this.temporaryItem["barcodeId"])[0].quantity += this.temporaryItem.quantity
-  //   } else {
-  //     this.cartitems.push(Object.assign({}, this.temporaryItem));
-  //   }
-  //   this.calculate();
-  //   this.inputValue = '';
-  //   this.temporaryItem.quantity = null;
-  //   this.temporaryItem = { Id: 0, quantity: null, tax: 0, amount: 0, price: 0, Tax1: 0, Tax2: 0,barcodeId: 0 };
-  //   console.log(this.productinput)
-  //   this.productinput['nativeElement'].focus()
-  //   this.filteredvalues = [];
-  //   this.scrollToBottom();
-  // }
+
   submitted: boolean = false
   addItem() {
     this.submitted = true
@@ -470,22 +390,8 @@ export class SaleComponent implements OnInit {
       this.model = ''
       this.filteredvalues = []
       this.submitted = false
-      // this.isDisable = true;
-      // console.log(this.order)
 
       return
-      // this.cartitems.push(Object.assign({}, this.temporaryItem));
-      // console.log(this.cartitems)
-      // this.calculate();
-      // this.temporaryItem.quantity = null;
-      // this.temporaryItem.price = null;
-      // this.temporaryItem.disc = null;
-      // this.temporaryItem = { Id: 0, quantity: null, taxpercent: null, tax: 0, amount: 0, price: null, Tax1: 0, Tax2: 0, barcode_Id: 0, disc: 0, product: "", };
-      // console.log(this.productinput)
-      // this.productinput['nativeElement'].focus()
-      // this.model = "";
-      // this.filteredvalues = [];
-      // this.submitted = false;
     }
   }
 
@@ -495,8 +401,6 @@ export class SaleComponent implements OnInit {
     })
   }
   barcodereaded(event) {
-    // console.log(event)
-    // console.log(event.element.nativeElement.id)
     var product = this.products.filter(x => x.Id == +event.element.nativeElement.id)[0]
     this.inputValue = product.Product
     this.barcodeItem = product
@@ -515,6 +419,7 @@ export class SaleComponent implements OnInit {
   quantitychange(item: OrderItemModule, event) {
     var prod = this.products.filter(x => x.stockBatchId == item.stockBatchId)[0]
     console.log(item.OrderQuantity, prod.maxqty)
+    console.log(this.products)
     if (item.OrderQuantity && item.OrderQuantity <= prod.maxqty) {
       console.log('%c GOOD! ', 'color: #bada55')
       this.products.filter(x => x.stockBatchId == item.stockBatchId)[0].quantity =
@@ -551,7 +456,6 @@ export class SaleComponent implements OnInit {
     this.cartitems[i].amount = this.cartitems[i].price * this.cartitems[i].quantity
     this.cartitems[i].tax =
       (this.cartitems[i].amount * (this.cartitems[i].Tax1 + this.cartitems[i].Tax2)) / 100
-    // console.log(i, this.cartitems[i].price, this.cartitems[i].quantity, this.cartitems[i].amount, qty)
     this.cartitems[i].amount = +this.cartitems[i].amount.toFixed(2)
     this.calculate()
   }
@@ -559,7 +463,6 @@ export class SaleComponent implements OnInit {
     this.subtotal = 0
     this.tax = 0
     this.cartitems.forEach(item => {
-      // console.log(item)
       item.amount = item.price * item.quantity
       item.tax = ((item.Tax1 + item.Tax2) * item.amount) / 100
       item.amount = +item.amount.toFixed(2)
@@ -568,7 +471,6 @@ export class SaleComponent implements OnInit {
     })
     this.subtotal = +this.subtotal.toFixed(2)
     this.tax = +this.tax.toFixed(2)
-    // console.log(this.tax)
   }
   date = new Date()
   onChange(e) {
@@ -579,12 +481,10 @@ export class SaleComponent implements OnInit {
   }
 
   handleOk(): void {
-    // console.log('Button ok clicked!')
     this.isVisible = false
   }
 
   handleCancel(): void {
-    // console.log('Button cancel clicked!')
     this.isVisible = false
   }
   openCustomClass(content) {
@@ -610,11 +510,9 @@ export class SaleComponent implements OnInit {
       this.temporaryItem[key] = product[key]
     })
     this.modalService.dismissAll()
-    // this.quantityel['nativeElement'].focus()
   }
   validation() {
     var isvalid = true
-    // if (!this.temporaryItem.productId) isvalid = false;
     if (this.temporaryItem.Quantity <= 0) isvalid = false
     if (this.temporaryItem.Quantity > this.temporaryItem.quantity) isvalid = false
     return isvalid
@@ -638,78 +536,78 @@ export class SaleComponent implements OnInit {
     orderkey_obj.timestamp = new Date().getTime()
     this.orderkey = orderkey_obj
     localStorage.setItem('orderkey', JSON.stringify(this.orderkey))
-    this.Auth.updateorderkey(this.orderkey).subscribe(d => { })
+    this.Auth.updateorderkey(this.orderkey).subscribe(d => {})
   }
 
   temporder: OrderModule = null
   transaction: Transaction
   currentitem: OrderItemModule = null
 
-  splitpayment() {
-    this.transactionlist = []
-    this.issplitpayment = true
-    this.paymentTypes.forEach(pt => {
-      var transaction = new Transaction()
-      transaction = new Transaction()
-      transaction.Remaining = this.temporder.BillAmount - this.temporder.PaidAmount
-      transaction.Amount = 0
-      transaction.OrderId = this.temporder.OrderId
-      transaction.StoreId = this.loginfo.StoreId
-      transaction.TransDate = moment().format('YYYY-MM-DD')
-      transaction.TransDateTime = moment().format('YYYY-MM-DD HH:mm')
-      transaction.TranstypeId = 1
-      transaction.UserId = this.temporder.UserId
-      transaction.CompanyId = this.temporder.CompanyId
-      transaction.CustomerId = this.temporder.CustomerDetails.Id
-      transaction.StorePaymentTypeName = pt.Description
-      transaction.StorePaymentTypeId = pt.Id
-      this.transactionlist.push(transaction)
-    })
-  }
+  // splitpayment() {
+  //   this.transactionlist = []
+  //   this.issplitpayment = true
+  //   this.paymentTypes.forEach(pt => {
+  //     var transaction = new Transaction()
+  //     transaction = new Transaction()
+  //     transaction.Remaining = this.temporder.BillAmount - this.temporder.PaidAmount
+  //     transaction.Amount = 0
+  //     transaction.OrderId = this.temporder.OrderId
+  //     transaction.StoreId = this.loginfo.StoreId
+  //     transaction.TransDate = moment().format('YYYY-MM-DD')
+  //     transaction.TransDateTime = moment().format('YYYY-MM-DD HH:mm')
+  //     transaction.TranstypeId = 1
+  //     transaction.UserId = this.temporder.UserId
+  //     transaction.CompanyId = this.temporder.CompanyId
+  //     transaction.CustomerId = this.temporder.CustomerDetails.Id
+  //     transaction.StorePaymentTypeName = pt.Description
+  //     transaction.StorePaymentTypeId = pt.Id
+  //     this.transactionlist.push(transaction)
+  //   })
+  // }
 
+  // saveOrder
   saveOrder() {
-    this.order.OrderNo = this.orderkey.orderno
+    console.log(this.order)
     this.updateorderno()
     this.order.OrderNo = this.orderkey.orderno
-    this.order.BillDate = moment().format('YYYY-MM-DD HH:MM A')
-    this.order.CreatedDate = moment().format('YYYY-MM-DD HH:MM A')
-    this.order.BillDateTime = moment().format('YYYY-MM-DD HH:MM A')
-    this.order.OrderedDate = moment().format('YYYY-MM-DD HH:MM A')
-    this.order.OrderedDateTime = moment().format('YYYY-MM-DD HH:MM A')
-    this.order.DeliveryDateTime = moment().format('YYYY-MM-DD HH:MM A')
-    this.order.ModifiedDate = moment().format('YYYY-MM-DD HH:MM A')
-    this.order.InvoiceNo = this.StoreId + moment().format('YYYYMMDD') + '/' + this.order.OrderNo
-    this.order.CompanyId = this.companyId
-    this.order.StoreId = this.StoreId
-    this.order.CustomerDetails.CompanyId = this.companyId
-    this.order.CustomerDetails.StoreId = this.StoreId
+    this.order.BillDate = moment().format('YYYY-MM-DD HH:mm A')
+    this.order.CreatedDate = moment().format('YYYY-MM-DD HH:mm A')
+    this.order.BillDateTime = moment().format('YYYY-MM-DD HH:mm A')
+    this.order.OrderedDate = moment().format('YYYY-MM-DD HH:mm A')
+    this.order.OrderedDateTime = moment().format('YYYY-MM-DD HH:mm A')
+    this.order.DeliveryDateTime = moment().format('YYYY-MM-DD HH:mm A')
+    this.order.ModifiedDate = moment().format('YYYY-MM-DD HH:mm A')
+    this.order.InvoiceNo =
+      this.loginfo.storeId + moment().format('YYYYMMDD') + '/' + this.order.OrderNo
+    console.log(this.order.InvoiceNo)
+    this.order.CompanyId = this.loginfo.companyId
+    this.order.StoreId = this.loginfo.storeId
+    this.printreceipt()
+    this.order.CustomerDetails.CompanyId = this.loginfo.companyId
+    this.order.CustomerDetails.StoreId = this.loginfo.StoreId
     this.order.OrderedById = 18
     this.order.ProdStatus = '1'
     this.order.WipStatus = '1'
     this.order.SuppliedById = 12
     this.order.UserId = this.user.id
-    // this.order.PaidAmount = this.order.BillAmount
-    // this.order.StorePaymentTypeId = 2
-
     if (this.order.PaidAmount > 0) {
       if (this.order.StorePaymentTypeId != -1) {
         var transaction = new Transaction(this.order.PaidAmount, this.order.StorePaymentTypeId)
-        // transaction.Id = this.loginfo.CompanyId
-        // transaction.Amount = this.order.PaidAmount
+        transaction.StorePaymentTypeId = this.order.StorePaymentTypeId
         transaction.OrderId = this.order.OrderId
         transaction.CustomerId = this.order.CustomerDetails.Id
-        // transaction.PaymentTypeId = this.
-        // transaction.StorePaymentTypeId = this.order.StorePaymentTypeId
         transaction.TranstypeId = 1
         transaction.PaymentStatusId = 0
         transaction.TransDateTime = moment().format('YYYY-MM-DD HH:mm:ss')
         transaction.TransDate = moment().format('YYYY-MM-DD')
         transaction.UserId = this.order.UserId
-        transaction.CompanyId = this.companyId
-        transaction.StoreId = this.StoreId
-        transaction.Notes = null
+        transaction.CompanyId = this.loginfo.companyId
+        transaction.StoreId = this.loginfo.StoreId
         transaction.InvoiceNo = this.order.InvoiceNo
         transaction.saved = true
+        transaction.StorePaymentTypeName = this.storePaymentTypes.filter(
+          x => x.id == transaction.StorePaymentTypeId,
+        )[0].name
         this.transaction = transaction
         this.order.Transactions.push(this.transaction)
       } else if (this.order.StorePaymentTypeId == -1) {
@@ -722,10 +620,6 @@ export class SaleComponent implements OnInit {
           this.order.Transactions.push(trxn)
         })
       }
-      // this.auth.savetransactiontonedb(this.order.Transactions).subscribe(dd => { })
-      // transaction.Remaining = 0
-      // if (!this.temporder.Transactions) this.temporder.Transactions = []
-      // this.order.Transactions.push(transaction)
     }
     console.log(this.order.CustomerDetails)
     localStorage.setItem('lastorder', JSON.stringify(this.order))
@@ -734,10 +628,6 @@ export class SaleComponent implements OnInit {
       this.sync.sync()
       this.order = new OrderModule(6)
     })
-    // this.Auth.saveorderdb(this.order).subscribe(data1 => {
-    //   this.sync.sync()
-    //   this.order = new OrderModule(6)
-    // })
     this.addcustomer()
     this.notification.success('Ordered Saved successfully!', `Ordered Saved successfully.`)
   }
@@ -751,7 +641,6 @@ export class SaleComponent implements OnInit {
 
   getcustomer() {
     this.Auth.getCustomerByPhone(this.order.CustomerDetails.PhoneNo).subscribe(data => {
-      // console.log(data)
       var customer: any = data[0]
       if (customer) {
         for (var key in this.order.CustomerDetails) this.order.CustomerDetails[key] = customer[key]
@@ -759,20 +648,204 @@ export class SaleComponent implements OnInit {
       }
     })
   }
-  // StorePaymentType_JSON
+
   storePaymentTypes: any = []
   GetStorePaymentType() {
     this.Auth.getstorepaymentType(0).subscribe(data => {
-      // this.StorePaymentTypeId = this.GetStorePaymentType.
       console.log(data)
       this.storePaymentTypes = data
     })
   }
-  // getuserid: any = []
-  // GetUserId() {
-  //   this.Auth.getUsersale(1).subscribe(data => {
-  //     console.log(data)
-  //     this.getuserid = data
-  //   })
-  // }
+
+  // print order
+
+  printersettings = { receiptprinter: '' }
+  printhtmlstyle = `
+  <style>
+    #printelement {
+      width: 270px;
+    }
+    .header {
+        text-align: center;
+    }
+    .item-table {
+        width: 100%;
+    }
+    .text-right {
+      text-align: right!important;
+    }
+    .text-left {
+      text-align: left!important;
+    }
+    .text-center {
+      text-align: center!important;
+    }
+    tr.nb, thead.nb {
+        border-top: 0px;
+        border-bottom: 0px;
+    }
+    table, p, h3 {
+      empty-cells: inherit;
+      font-family: Helvetica;
+      font-size: small;
+      width: 290px;
+      padding-left: 0px;
+      border-collapse: collapse;
+    }
+    table, tr, td {
+      border-bottom: 0;
+    }
+    hr {
+      border-top: 1px dashed black;
+    }
+    tr.bt {
+      border-top: 1px dashed black;
+      border-bottom: 0px;
+    }
+    tr {
+      padding-top: -5px;
+    }
+  </style>`
+
+  getcustomerhtml() {
+    var html = ''
+    if (this.order.CustomerDetails.PhoneNo) {
+      html = `<div ${this.order.CustomerDetails.PhoneNo ? '' : 'hidden'} class="header">
+          <h3 ${this.order.CustomerDetails.Name ? '' : 'hidden'}>${
+        this.order.CustomerDetails.Name
+      }</h3>
+          <p>${
+            this.order.CustomerDetails.Address ? this.order.CustomerDetails.Address + '<br>' : ''
+          }${this.order.CustomerDetails.City ? this.order.CustomerDetails.City + ',' : ''}${
+        this.order.CustomerDetails.PhoneNo
+      }</p>
+      </div>
+      <hr>`
+    }
+    return html
+  }
+
+  printreceipt() {
+    // console.log(this.order.AllItemDisc, this.order.AllItemTaxDisc, this.order.AllItemTotalDisc)
+    console.log(
+      this.order.OrderDiscount,
+      this.order.OrderTaxDisc,
+      this.order.OrderTotDisc,
+      this.order.InvoiceNo,
+    )
+    this.orderlogging('receipt_print')
+    console.log(this.order.InvoiceNo)
+    var printtemplate = `
+    <div id="printelement">
+    <div class="header">
+        <h3>${this.loginfo.name}</h3>
+        <p>
+            ${this.loginfo.store}, ${this.loginfo.address}<br>
+            ${this.loginfo.city}, ${this.loginfo.phoneNo}
+            GSTIN:${this.orderkey.GSTno}<br>
+            Receipt:${this.order.InvoiceNo}<br>
+            ${moment(this.order.OrderedDateTime).format('LLL')}
+        </p>
+    </div>
+    <hr>
+    ${this.getcustomerhtml()}
+    <table class="item-table">
+        <thead class="nb">
+            <th class="text-left" style="width: 100px;">ITEM</th>
+            <th class="text-right">PRICE</th>
+            <th class="text-right">QTY</th>
+            <th class="text-right">AMOUNT</th>
+        </thead>
+        <tr>
+        <td colspan="4"><hr></td>
+      </tr>
+        <tbody>`
+    var extra = 0
+    this.order.Items.forEach(item => {
+      printtemplate += `
+      <tr class="nb">
+          <td class="text-left">${item.ProductName}</td>
+          <td class="text-right">${item.Price.toFixed(2)}</td>
+          <td class="text-right">${item.OrderQuantity}${
+        item.ComplementryQty > 0 ? '(' + item.ComplementryQty + ')' : ''
+      }</td>
+          <td class="text-right">${item.TotalAmount.toFixed(2)}</td>
+      </tr>`
+      extra += item.Extra
+    })
+    printtemplate += `
+    <tr class="bt">
+        <td class="text-left"><strong>Sub Total</strong></td>
+        <td colspan="2"></td>
+        <td class="text-right">${this.order.Subtotal.toFixed(2)}</td>
+    </tr>
+    <tr class="nb" ${this.order.DiscAmount + this.order.AllItemTotalDisc == 0 ? 'hidden' : ''}>
+        <td class="text-left"><strong>Discount</strong></td>
+        <td colspan="2"></td>
+        <td class="text-right">${(+(this.order.DiscAmount + this.order.AllItemTotalDisc).toFixed(
+          0,
+        )).toFixed(2)}</td>
+    </tr>
+    <tr class="nb" ${this.order.Tax1 == 0 ? 'hidden' : ''}>
+        <td class="text-left"><strong>CGST</strong></td>
+        <td colspan="2"></td>
+        <td class="text-right">${(
+          this.order.Tax1 +
+          +((this.order.OrderTotDisc + this.order.AllItemTotalDisc) / 2).toFixed(0)
+        ).toFixed(2)}</td>
+    </tr>
+    <tr class="nb" ${this.order.Tax2 == 0 ? 'hidden' : ''}>
+        <td class="text-left"><strong>SGST</strong></td>
+        <td colspan="2"></td>
+        <td class="text-right">${(
+          this.order.Tax2 +
+          +((this.order.OrderTotDisc + this.order.AllItemTotalDisc) / 2).toFixed(0)
+        ).toFixed(2)}</td>
+    </tr>`
+    // this.order.additionalchargearray.forEach(charge => {
+    //   if (charge.selected) {
+    //     printtemplate += `
+    //     <tr class="nb">
+    //         <td class="text-left"><strong>${charge.Description}</strong></td>
+    //         <td colspan="2"></td>
+    //         <td class="text-right">${charge.ChargeValue}</td>
+    //     </tr>`
+    //   }
+    // })
+    printtemplate += `
+          <tr class="nb" ${extra > 0 ? '' : 'hidden'}>
+              <td class="text-left"><strong>Extra</strong></td>
+              <td colspan="2"></td>
+              <td class="text-right">${extra.toFixed(2)}</td>
+          </tr>
+          <tr class="nb">
+              <td class="text-left"><strong>Paid</strong></td>
+              <td colspan="2"></td>
+              <td class="text-right">${this.order.PaidAmount.toFixed(2)}</td>
+          </tr>
+          <tr class="nb">
+              <td class="text-left"><strong>Total</strong></td>
+              <td colspan="2"></td>
+              <td class="text-right">${this.order.BillAmount.toFixed(2)}</td>
+          </tr>
+          <tr class="nb" ${this.order.BillAmount - this.order.PaidAmount > 0 ? '' : 'hidden'}>
+              <td class="text-left"><strong>Balance</strong></td>
+              <td colspan="2"></td>
+              <td class="text-right">${(this.order.BillAmount - this.order.PaidAmount).toFixed(
+                2,
+              )}</td>
+          </tr>
+        </tbody>
+      </table>
+      <hr>
+      <div class="text-center">
+        <p>Powered By BizDom.</p>
+      </div>
+    </div>`
+    printtemplate += this.printhtmlstyle
+    console.log(printtemplate)
+    if (this.printersettings) {
+      this.printservice.print(printtemplate, [this.printersettings.receiptprinter])
+    }
+  }
 }

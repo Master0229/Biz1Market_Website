@@ -20,7 +20,7 @@ export class TopbarFavPagesComponent implements OnInit {
   ngOnInit() {
     this.menuService.getMenuData().subscribe(menuData => (this.menuData = menuData))
     this.loadPagesList()
-    this.filterPagesList()
+    // this.filterPagesList()
   }
 
   loadPagesList() {
