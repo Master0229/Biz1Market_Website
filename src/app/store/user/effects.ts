@@ -11,7 +11,7 @@ import * as Reducers from 'src/app/store/reducers'
 import * as UserActions from './actions'
 import { jwtAuthService } from 'src/app/services/jwt'
 import { firebaseAuthService } from 'src/app/services/firebase'
-import { ConstantsService } from "../../services/constants/constants.service";
+import { ConstantsService } from '../../services/constants/constants.service'
 @Injectable()
 export class UserEffects implements OnInitEffects {
   constructor(
@@ -22,7 +22,7 @@ export class UserEffects implements OnInitEffects {
     private route: ActivatedRoute,
     private rxStore: Store<any>,
     private notification: NzNotificationService,
-    private globals: ConstantsService
+    private globals: ConstantsService,
   ) {}
 
   ngrxOnInitEffects(): Action {
@@ -41,15 +41,16 @@ export class UserEffects implements OnInitEffects {
       if (settings.authProvider === 'jwt') {
         return this.jwtAuthService.login(payload.email, payload.password).pipe(
           map(response => {
-            if (response) {
-              response.loggedin =true;
-              this.globals.email = payload.email;
+            if (response['status'][0]['result'] == 'Login_Success') {
+              response.loggedin = true
+              this.globals.email = payload.email
               this.globals.emit(response)
+              localStorage.setItem('stores', JSON.stringify(response['stores']))
               this.notification.success('Logged In', 'You have successfully logged in!')
               // return this.router.navigate([this.route.snapshot.queryParams.returnUrl])
               return new UserActions.LoadCurrentAccount()
             }
-            this.notification.warning('Auth Failed', response)
+            this.notification.warning('Auth Failed', response['status'][0]['result'])
             return new UserActions.LoginUnsuccessful()
           }),
           catchError(error => {

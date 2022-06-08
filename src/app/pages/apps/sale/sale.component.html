@@ -32,7 +32,7 @@
                                                   </ng-template>
                                                   <input #productautocomplete id="typeahead-template" onfocus="this.select()"
                                                       [ngClass]="{'is-invalid':submitted && !temporaryItem.productId}"
-                                                      #productautocomplete style="height: 84%;" #instance="ngbTypeahead"
+                                                      style="height: 84%;" #instance="ngbTypeahead"
                                                       type="text" class="form-control" [(ngModel)]="model"
                                                       placeholder="Search Product..." [ngbTypeahead]="search"
                                                       [resultTemplate]="rt" [inputFormatter]="formatter"

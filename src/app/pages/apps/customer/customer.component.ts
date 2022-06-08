@@ -31,11 +31,13 @@ export class CustomerComponent implements OnInit {
     // console.log(userinfoObj)
     // this.CompanyId = userinfoObj[0].CompanyId;
     // var logInfo = JSON.parse(localStorage.getItem("logInfo"));
-    this.CompanyId = 1
-    this.StoreId = 26
   }
 
   ngOnInit() {
+    const user = JSON.parse(localStorage.getItem('user'))
+    const store = JSON.parse(localStorage.getItem('store'))
+    this.CompanyId = user.companyId
+    this.StoreId = user.storeid
     //  this.datService.execute();
     this.getCustomer()
   }

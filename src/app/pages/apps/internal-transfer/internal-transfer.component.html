@@ -5,16 +5,6 @@
         <div class=" justify-content-center mr-2 mt-3">
           <input nz-input type="number" [(ngModel)]="ordNo" placeholder="Order No" min="1" />
         </div>
-        <!-- <div class=" justify-content-center mr-auto mt-3">
-                  <ng-template class="w-100" #vn let-r="result" let-t="term">
-                      <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
-                  </ng-template>
-                  <input #storeautocomplete style="height: 33px;" #instance="ngbTypeahead" type="text"
-                      class="form-control" [(ngModel)]="model" placeholder="Search Store..."
-                      [ngbTypeahead]="searchstore" [resultTemplate]="vn" [inputFormatter]="formatterstore"
-                      (selectItem)="selectedstoreitem($event.item)" />
-
-              </div> -->
         <ng-template class="w-100" #ot let-o="result" let-t="term">
           <ngb-highlight [result]="o.name" [term]="t"></ngb-highlight>
         </ng-template>
@@ -37,7 +27,7 @@
           <nz-date-picker [(ngModel)]="date" (ngModelChange)="onChange($event)"></nz-date-picker>
         </div>
         <div class="d-flex flex-column justify-content-center" style="margin-left: 40px;">
-          <button class="btn btn-success" href="javascript: void(0);" (click)="saveOrder()">
+          <button class="btn btn-success" (click)="saveOrder()">
             Save
           </button>
         </div>
@@ -68,6 +58,23 @@
         </div>
         <br>
 
+        <div>
+          <input #price placeholder="price..." [ngClass]="{'is-invalid':submitted &&temporaryItem.price <= 0}"
+            onfocus="this.select()" [(ngModel)]="temporaryItem.price" min="1" type="number" class="form-control"
+            (keyup.enter)="tax1.focus()" />
+        </div>
+        <br>
+
+        <div>
+          <input #tax1 [(ngModel)]="temporaryItem.tax1" onfocus="this.select()" placeholder="tax1..." type="number"
+            class="form-control" (keyup.enter)="addItem()" />
+        </div>
+        <br>
+        <div>
+          <input #tax2 [(ngModel)]="temporaryItem.tax2" onfocus="this.select()" placeholder="tax2..." type="number"
+            class="form-control" (keyup.enter)="addItem()" />
+        </div>
+
       </nz-card>
       <ng-template #extraTemplate>
         <a href="javascript: void(0);" class="btn btn-sm btn-primary" (click)="addItem()">
@@ -76,7 +83,6 @@
       </ng-template>
       <div class="col-xs-12 col-md-9 ">
         <div class="card" *ngIf="isTable">
-
           <nz-table #getproduct [nzShowPagination]="false" [nzData]="products" class="kit__utils__table"
             *ngIf="isTable">
             <thead>
@@ -85,6 +91,8 @@
                 <th><strong> Description</strong> </th>
                 <th><strong>Quantity </strong> </th>
                 <th><strong>Price </strong> </th>
+                <th><strong>Tax1 </strong> </th>
+                <th><strong>Tax2 </strong> </th>
                 <th><strong>Action </strong> </th>
               </tr>
             </thead>
@@ -103,11 +111,18 @@
                 <td>
                   {{product.Price}}
                 </td>
+                <td>
+                  {{product.Tax1}}
+                </td>
+                <td>
+                  {{product.Tax2}}
+                </td>
                 <td class="text-right">
                   <a href="javascript: void(0);" (click)="delete(i)" class="btn btn-sm btn-light pull-left"
                     slot="actions">
                     <i class="fe fe-trash mr-1"></i>
                   </a>
+                </td>
               </tr>
             </tbody>
           </nz-table>
@@ -146,7 +161,6 @@
         <th><strong>OrderDate</strong> </th>
         <th><strong>DelivDate</strong> </th>
         <th><strong>OrderValue</strong> </th>
-        <!-- <th>Location</th> -->
         <th><strong>Action</strong> </th>
       </tr>
     </thead>
@@ -154,8 +168,7 @@
       <tr *ngFor="let ord of  basicTable.data; let i = index">
         <td>{{i+1}}</td>
         <td>
-          <a class="btn btn-sm btn-light" href="javascript: void(0);"
-            (click)="openDetailpopup(contentdetail1,ord.id);reload()">
+          <a class="btn btn-sm btn-light" href="javascript: void(0);" (click)="getorderid(ord.Id,contentdetail1);">
             {{ord.OrderNo}}
           </a>
         </td>
@@ -175,9 +188,7 @@
         <td>
           {{ord.BillAmount}}
         </td>
-        <!-- <td>
-          {{ord.name}}
-     </td> -->
+
         <td>
           <div class="btn-group mr-2 mb-2">
             <a href="javascript: void(0);" (click)="deleteOrder(ord.Id)" class="btn btn-sm btn-light pull-left"
@@ -187,19 +198,15 @@
             <a routerLink="/apps/editinternal/{{ord.Id}}" href="javascript: void(0);" class="btn btn-sm btn-light ">
               <i class="fe fa-lg fe-edit "></i>
             </a>
-            <a routerLink="/apps/dispatch/{{ord.Id}}" href="javascript: void(0);" class="btn btn-sm btn-light ">
+            <!-- <a routerLink="/apps/dispatch/{{ord.Id}}" href="javascript: void(0);" class="btn btn-sm btn-light ">
               <i class="fa fa-lg fa-truck" aria-hidden="true"></i>
-            </a>
+            </a> -->
           </div>
         </td>
       </tr>
 
     </tbody>
   </nz-table>
-  <!-- <div class="row">
-      <button class="btn btn-success btn-sm mx-100 w-30 pull-right" *ngIf="isShown" (click)="locback()">Go
-          Back</button>
-  </div> -->
 </div>
 
 <ng-template #contentdetail1 let-modal>
@@ -209,29 +216,36 @@
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
-  <nz-table class="table table-sm mb-0">
+  <nz-table class="table table-sm mb-0" [nzFrontPagination]="false" [nzData]="popupData.receipts">
     <thead>
       <tr>
-        <td>Product</td>
-        <td>Quantity</td>
-        <td>Price</td>
+        <td><strong>Product</strong></td>
+        <td><strong>Quantity</strong></td>
+        <td class="text-right"><strong>Price</strong></td>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let ord of popupData.order">
-        <td>{{ord.name}}</td>
-        <td>{{ord.orderQuantity}}</td>
-        <td>&#8377;{{ord.price | number:".2"}}</td>
+      <tr *ngFor="let ord of OrderDetail.itemDetails.Items">
+        <td>{{ord.ProductName}}</td>
+        <td>{{ord.OrderQuantity}}</td>
+        <td class="text-right">&#8377;{{ord.TotalAmount | number:".2"}}</td>
       </tr>
       <tr>
         <td></td>
-        <td> TotalQty</td>
-        <td>{{ TotalPrdQty}}</td>
+        <td> <strong>CGST</strong> </td>
+        <td class="text-right"> {{OrderDetail.tax1 | number:".2"}}</td>
       </tr>
       <tr>
         <td></td>
-        <td> TotalAmt</td>
-        <td>{{TotalProductSale}}</td>
+        <td> <strong>SGST</strong> </td>
+        <td class="text-right"> {{OrderDetail.tax2 | number:".2"}} </td>
+      </tr>
+
+      <tr>
+        <td></td>
+        <td> <strong>TotalAmt</strong> </td>
+        <td class="text-right"> &#8377; <strong class="font-weight-bold">{{OrderDetail.billAmount1 |
+            number:".2"}}</strong></td>
       </tr>
     </tbody>
   </nz-table>

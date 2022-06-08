@@ -55,6 +55,7 @@ export class CategoryComponent implements OnInit {
   categoryid: any = []
   companyid: number
   Category: any
+  StoreId: any
 
   constructor(
     private Auth: AuthService,
@@ -69,6 +70,10 @@ export class CategoryComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const user = JSON.parse(localStorage.getItem('user'))
+    const store = JSON.parse(localStorage.getItem('store'))
+    this.CompanyId = user.companyId
+    this.StoreId = user.storeid
     this.getCategory()
     this.getpcategories()
     this.getvariantgroups()
@@ -184,7 +189,7 @@ export class CategoryComponent implements OnInit {
   }
 
   gettax() {
-    this.Auth.GetTaxGrp(this.loginfo.companyId).subscribe(data => {
+    this.Auth.GetTaxGrp(this.CompanyId).subscribe(data => {
       this.taxgroups = data
       console.log(this.taxgroups)
     })

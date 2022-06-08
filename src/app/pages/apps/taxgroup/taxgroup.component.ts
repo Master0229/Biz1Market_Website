@@ -7,6 +7,8 @@ import { AuthService } from 'src/app/auth.service'
   styleUrls: ['./taxgroup.component.scss'],
 })
 export class TaxgroupComponent implements OnInit {
+  CompanyId: any
+  StoreId: any
   loginfo: any
   taxgroups: any = []
   show = true
@@ -23,24 +25,39 @@ export class TaxgroupComponent implements OnInit {
   constructor(private Auth: AuthService) {}
 
   ngOnInit(): void {
-    this.Auth.getloginfo().subscribe(data => {
-      this.loginfo = data
-      this.gettax()
-      this.taxgroup = {
-        id: 0,
-        description: '',
-        tax1: 0,
-        tax2: 0,
-        tax3: 0,
-        companyId: this.loginfo.companyId,
-        isInclusive: false,
-      }
-    })
+    const user = JSON.parse(localStorage.getItem('user'))
+    const store = JSON.parse(localStorage.getItem('store'))
+    this.CompanyId = user.companyId
+    this.StoreId = user.storeid
+    this.gettax()
+    this.taxgroup = {
+      id: 0,
+      description: '',
+      tax1: 0,
+      tax2: 0,
+      tax3: 0,
+      companyId: this.CompanyId,
+      isInclusive: false,
+    }
+
+    // this.Auth.getloginfo().subscribe(data => {
+    //   this.loginfo = data
+    //   this.gettax()
+    //   this.taxgroup = {
+    //     id: 0,
+    //     description: '',
+    //     tax1: 0,
+    //     tax2: 0,
+    //     tax3: 0,
+    //     companyId: this.CompanyId,
+    //     isInclusive: false,
+    //   }
+    // })
   }
 
   tabledata: []
   gettax() {
-    this.Auth.GetTaxGrp(this.loginfo.companyId).subscribe(data => {
+    this.Auth.GetTaxGrp(this.CompanyId).subscribe(data => {
       this.taxgroups = data
       this.tabledata = this.taxgroups
       console.log(this.taxgroups)
@@ -72,7 +89,7 @@ export class TaxgroupComponent implements OnInit {
             tax1: 0,
             tax2: 0,
             tax3: 0,
-            companyId: this.loginfo.companyId,
+            companyId: this.CompanyId,
             isInclusive: false,
           }
           this.gettax()
@@ -87,7 +104,7 @@ export class TaxgroupComponent implements OnInit {
             tax1: 0,
             tax2: 0,
             tax3: 0,
-            companyId: this.loginfo.companyId,
+            companyId: this.CompanyId,
             isInclusive: false,
           }
           this.gettax()
@@ -110,7 +127,7 @@ export class TaxgroupComponent implements OnInit {
       tax1: 0,
       tax2: 0,
       tax3: 0,
-      companyId: this.loginfo.companyId,
+      companyId: this.CompanyId,
       isInclusive: false,
     }
   }

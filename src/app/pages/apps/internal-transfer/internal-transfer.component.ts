@@ -14,6 +14,7 @@ import {
   OrderModule,
   OrdModule,
   OrderItemDetailModule,
+  OrderstatusDetails,
 } from './internal-transfer.module'
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast'
 import { Location } from '@angular/common'
@@ -72,7 +73,6 @@ export class InternalTransferComponent implements OnInit {
   selectedsupplieritem(item) {
     console.log('item', item)
     this.SuppliedById = item.id
-    // this.storeIdByInternal = item.id
   }
   searchsupplier = (text$: Observable<string>) =>
     text$.pipe(
@@ -150,10 +150,10 @@ export class InternalTransferComponent implements OnInit {
   isShown = true
   isTable = false
   ordNo = 0
-  storeId = 56
+  storeId: any
   orderDate = ''
   CustomerAddressId = null
-  CompanyId = 1
+  CompanyId: any
   CustomerId = null
   InvoiceNo = 0
   sourceId = 0
@@ -167,7 +167,7 @@ export class InternalTransferComponent implements OnInit {
   ProdStatus = ''
   DispatchStatus = 0
   ReceiveStatus = 0
-  OrderStatusId = 0
+  OrderStatusId = 1
   OrderedById = 0
   SuppliedById = 0
   FoodReady = true
@@ -196,9 +196,10 @@ export class InternalTransferComponent implements OnInit {
   isDisp = false
   numRecordsStr = 50
   // orders: any = []
-  companyId = 1
+  // companyId = 1
   numRecords = 50
   NewArr: any = []
+  show = true
   tableData = [
     {
       key: '1',
@@ -222,12 +223,12 @@ export class InternalTransferComponent implements OnInit {
   temporaryItem: any = { DiscAmount: 0, Quantity: null }
   barcodeItem = { quantity: null, tax: 0, amount: 0, price: null, Tax1: 0, Tax2: 0 }
   barcodemode: boolean = false
-  customerdetails = { data_state: '', name: '', PhoneNo: '', email: '', address: '', companyId: 1 }
+  customerdetails = { data_state: '', name: '', PhoneNo: '', email: '', address: '', companyId: 0 }
   customers: any = []
   users = []
   Ordprd: any = []
   orderType = 'Receiver'
-  orderStatus = 3
+  // orderStatus = 3
 
   // quantityfc = new FormControl('', [Validators.required, Validators.min(1)]);
 
@@ -248,13 +249,33 @@ export class InternalTransferComponent implements OnInit {
 
   //   return this.quantityfc.hasError('min') ? 'Quantity should be greater than 0' : '';
   // }
+  loginfo
+  StoreId: any
+
+  Items: Array<OrderItemModule> = []
 
   ngOnInit(): void {
+    const user = JSON.parse(localStorage.getItem('user'))
+    const store = JSON.parse(localStorage.getItem('store'))
+    this.CompanyId = user.companyId
+    this.StoreId = user.storeid
     this.order = new OrderModule(2)
     this.products = []
     this.getBarcodeProduct()
     this.getStoreList()
     this.Getorderlist()
+
+    // this.Auth.getdbdata(['loginfo']).subscribe(data => {
+    //   this.loginfo = data['loginfo'][0]
+    //   this.CompanyId = this.loginfo.companyId
+    //   this.StoreId = this.loginfo.storeId
+    //   console.log(this.loginfo)
+    //   this.order = new OrderModule(2)
+    //   this.products = []
+    //   this.getBarcodeProduct()
+    //   this.getStoreList()
+    //   this.Getorderlist()
+    // })
 
     // this.products = JSON.parse(localStorage.getItem("Product"));
     this.products.forEach(product => {
@@ -270,7 +291,7 @@ export class InternalTransferComponent implements OnInit {
   // this.location.back()
 
   getBarcodeProduct() {
-    this.Auth.getBarcodeProduct(this.CompanyId, this.streId).subscribe(data => {
+    this.Auth.getBarcodeProduct(this.CompanyId, this.StoreId).subscribe(data => {
       console.log('data', data)
       this.products = data['products']
       this.batchno = data['lastbatchno'] + 1
@@ -318,11 +339,12 @@ export class InternalTransferComponent implements OnInit {
       return `with: ${reason}`
     }
   }
+  orderstatus = 1
   saveOrder() {
-    // this.order.OrderNo = this.orderkey.orderno
+    console.log(this.order)
     this.updateorderno()
     this.order.OrderNo = this.orderkey.orderno
-    this.order.StoreId = this.storeId
+    this.order.StoreId = this.StoreId
     this.order.BatchNo = this.batchno
     this.order.BillDate = moment().format('YYYY-MM-DD HH:MM A')
     this.order.CreatedDate = moment().format('YYYY-MM-DD HH:MM A')
@@ -333,24 +355,28 @@ export class InternalTransferComponent implements OnInit {
     this.order.ModifiedDate = moment().format('YYYY-MM-DD HH:MM A')
     this.order.CompanyId = this.CompanyId
     this.order.InvoiceNo = this.InvoiceNo
-    this.order.BillAmount = this.Price
-    this.order.PaidAmount = this.Price
     this.order.RefundAmount = this.refamt
-    this.order.Tax1 = this.Tax1
-    this.order.Tax2 = this.Tax2
-    this.order.Tax3 = this.Tax3
     this.order.ProdStatus = '1'
     this.order.WipStatus = '1'
     this.order.OrderStatusId = this.OrderStatusId
     this.order.OrderedById = this.OrderedById
     this.order.SuppliedById = this.SuppliedById
-    this.order.FoodReady = this.FoodReady
     this.order.OrderType = this.OrderType
     this.order.SpecialOrder = this.SpecialOrder
     this.order.DiscAmount = this.DiscAmount
     this.order.DiscPercent = this.DiscPercent
     this.order.PreviousStatusId = this.PreviousStatusId
+    this.order.OrderStatus = this.orderstatus
 
+    this.order.Items.forEach(item => {
+      item.CompanyId = this.CompanyId
+    })
+    this.order.OrderDetail.forEach(Od => {
+      Od.CompanyId = this.CompanyId
+    })
+    console.log(this.Items)
+
+    // this.order.OrderStatusDetails = new OrderstatusDetails()
     console.log('save', this.order)
     this.RecData = new DelModule(
       this.CompanyId,
@@ -362,10 +388,11 @@ export class InternalTransferComponent implements OnInit {
     console.log('finalarray', this.RecData)
     this.Auth.savestock(this.RecData).subscribe(data => {
       console.log(data)
+
       this.isShown = !this.isShown
       this.isTable = !this.isTable
-      // this.getOrderList()
       this.Getorderlist()
+      this.order = new OrderModule(2)
     })
   }
   internal() {
@@ -394,11 +421,7 @@ export class InternalTransferComponent implements OnInit {
     this.Ordprd.push({
       companyId: this.CompanyId,
       searchId: this.ordId,
-      // UserID:this.users[0].id,
-      // orderType:this.orderType,
-      // orderStatus:this.orderStatus,
       numRecordsStr: this.numRecordsStr,
-      // dispatchStatus:this.dispatchStatus
     })
     this.Auth.getorder(this.Ordprd).subscribe(data => {
       this.OrdData = data
@@ -527,28 +550,11 @@ export class InternalTransferComponent implements OnInit {
       this.model = ''
       this.filteredvalues = []
       this.submitted = false
-
       console.log('cvcv', this.order)
-      return
-      // this.cartitems.push(Object.assign({}, this.temporaryItem));
-      // console.log(this.cartitems)
-      // this.calculate();
-      // this.temporaryItem.quantity = null;
-      // this.temporaryItem.price = null;
-      // this.temporaryItem.disc = null;
-      // this.temporaryItem = { Id: 0, quantity: null, taxpercent: null, tax: 0, amount: 0, price: null, Tax1: 0, Tax2: 0, barcode_Id: 0, disc: 0, product: "", };
-      // console.log(this.productinput)
-      // this.productinput['nativeElement'].focus()
-      // this.model = "";
-      // this.filteredvalues = [];
-      // this.submitted = false;
     }
+    return
   }
-  // getcustomerdetails(compid) {
-  //   this.Auth.getcustomers().subscribe(data => {
-  //     console.log(compid)
-  //   })
-  // }
+
   barcodereaded(event) {
     console.log(event)
     console.log(event.element.nativeElement.id)
@@ -576,10 +582,7 @@ export class InternalTransferComponent implements OnInit {
   deleteOrder(Id) {
     console.log('delete', Id)
     console.log(this.NewArr)
-    this.Auth.deleteItem({
-      companyId: 1,
-      orderId: Id,
-    }).subscribe(data => {
+    this.Auth.deleteItem({ companyId: this.CompanyId, orderId: Id }).subscribe(data => {
       this.getorderedList = data
       console.log('delete', data)
       this.Getorderlist()
@@ -671,29 +674,58 @@ export class InternalTransferComponent implements OnInit {
   reloadPage() {
     window.location.reload()
   }
-  openDetailpopup(contentdetail, id) {
-    this.Ordprd.push({
-      companyId: this.CompanyId,
-      searchId: id,
-      UserID: this.users[0].id,
-      orderType: this.orderType,
-      orderStatus: this.orderStatus,
-      numRecordsStr: this.numRecordsStr,
-      dispatchStatus: this.dispatchStatus,
-    })
-    this.Auth.getorder(this.Ordprd).subscribe(data => {
-      this.popupData = data
-      console.log('popupData', this.popupData)
-    })
-    this.TotalProductSale = 0
-    this.TotalPrdQty = 0
 
-    for (let i = 0; i < this.popupData.order.length; i++) {
-      this.TotalProductSale = this.TotalProductSale + this.popupData.order[i].price
-      this.TotalPrdQty = this.TotalPrdQty + this.popupData.order[i].orderQuantity
-      this.TotalProductSale = +this.TotalProductSale.toFixed(2)
-      this.TotalPrdQty = +this.TotalPrdQty.toFixed(2)
-    }
+  // order: any = null
+
+  // openDetailpopup(contentdetail, orderId) {
+  //   this.OrdId = orderId
+  //   if (this.OrdId != 0) {
+  //     this.Auth.getOrderIdinternal(this.OrdId).subscribe(data => {
+  //       this.popupData = data
+  //       console.log(this.popupData)
+  //     })
+  //   }
+  //   // for (let i = 0; i < this.popupData.orders.length; i++) {
+  //   //   this.TotalProductSale = this.TotalProductSale + this.popupData.orders[i].billAmount
+  //   //   this.TotalPrdQty = this.TotalPrdQty + this.popupData.orders[i].orderQuantity
+  //   //   this.TotalProductSale = +this.TotalProductSale.toFixed(2)
+  //   //   this.TotalPrdQty = +this.TotalPrdQty.toFixed(2)
+  //   // }
+  //   const modalRef = this.modalService
+  //     .open(contentdetail, {
+  //       ariaLabelledBy: 'modal-basic-title',
+  //       centered: true,
+  //     })
+  //     .result.then(
+  //       result => { },
+  //       reason => { },
+  //     )
+  // }
+
+  OrdId: number = 0
+  OrderDetail: any = null
+  getorderid(OrdId, modalRef) {
+    this.Auth.getOrderIdinternal(OrdId).subscribe(data => {
+      this.popupData = data
+      this.popupData.receipts.forEach(rec => {
+        rec.itemDetails = JSON.parse(rec.orderJson)
+        console.log(JSON.parse(rec.orderJson))
+      })
+      this.OrderDetail = this.popupData.receipts[0]
+      console.log(this.popupData)
+      this.openDetailpopup(modalRef)
+    })
+  }
+
+  orders: any = null
+
+  parseOrder(json_string, modalRef) {
+    this.orders = JSON.parse(json_string)
+    console.log(this.orders)
+    this.openDetailpopup(modalRef)
+  }
+
+  openDetailpopup(contentdetail) {
     const modalRef = this.modalService
       .open(contentdetail, {
         ariaLabelledBy: 'modal-basic-title',
@@ -704,11 +736,11 @@ export class InternalTransferComponent implements OnInit {
         reason => {},
       )
   }
-  //queen
+
   storeIdByInt: any
   getorderedList: any = []
   Getorderlist() {
-    this.Auth.getorderlist().subscribe(data => {
+    this.Auth.getorderlist(this.StoreId).subscribe(data => {
       this.getorderedList = data['orders']
       this.tabledata = this.getorderedList
       console.log(this.getorderedList)
@@ -727,31 +759,17 @@ export class InternalTransferComponent implements OnInit {
   }
 
   compid: any
-  // Master
-  // 31-01-2022
-  StoreByIdInternal(storeid) {
-    this.Auth.getstoreIdInternal(storeid).subscribe(data => {
+
+  StoreByIdInternal(storeId) {
+    this.Auth.getstoreIdInternal(this.CompanyId, storeId).subscribe(data => {
       const stores = data['storeList']
       this.getorderedList.forEach(order => {
-        // console.log(
-        //   order.SuppliedById,
-        //   stores.filter(x => x.id == order.SuppliedById),
-        // )
         order.supplier = stores.filter(x => x.id == order.SuppliedById)[0]?.name
         order.receiver = stores.filter(x => x.id == order.OrderedById)[0]?.name
       })
     })
   }
-  // selectedorderstore(item) {
-  //   console.log('item', item)
-  //   this.StoreId = item.id
-  // }
-  // selectedreceiverstore(item) {
-  //   console.log('item', item)
-  //   this.StoreId = item.id
-  // }
 
-  // Queen 31-01-2022
   orderkey = { orderno: 1, timestamp: 0, GSTno: '' }
 
   updateorderno() {

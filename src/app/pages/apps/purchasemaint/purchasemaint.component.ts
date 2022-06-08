@@ -399,9 +399,10 @@ export class PurchasemaintComponent implements OnInit {
       this.trans.paystore = this.billpay.bills.value.paymentStore
     })
   }
-
+  strdate: string
+  enddate: string
   getproducts() {
-    this.Auth.getProduct(this.id, (this.companyId = 1)).subscribe(data => {
+    this.Auth.getProduct(this.id, this.CompanyId, this.strdate, this.enddate).subscribe(data => {
       this.products = data['products']
       console.log(this.products)
     })

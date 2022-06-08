@@ -161,21 +161,30 @@ export const getMenuData: any[] = [
     icon: 'fe fe-truck',
     children: [
       {
-        title: 'Internal Transfer',
+        title: 'To Order',
         key: 'appsInternalTransfer',
-        icon: 'fa fa-code-fork',
         url: '/apps/internaltransfer',
       },
       {
-        title: 'Dispatch Items',
-        key: 'appsDispatchItem',
-        url: '/apps/DispatchItem',
+        title: 'To Receive',
+        key: 'appsReceiveOrders',
+        url: '/apps/ReceiveOrders',
       },
       {
-        title: 'Dispatch Orders',
-        key: 'appsDispatchOrders',
-        url: '/apps/DispatchOrders',
+        title: 'To Dispatch',
+        key: 'appsDispatch',
+        url: '/apps/dispatch',
       },
+      // {
+      //   title: 'Dispatch Items',
+      //   key: 'appsDispatchItem',
+      //   url: '/apps/DispatchItem',
+      // },
+      // {
+      //   title: 'Dispatch Orders',
+      //   key: 'appsDispatchOrders',
+      //   url: '/apps/DispatchOrders',
+      // },
     ],
   },
   {

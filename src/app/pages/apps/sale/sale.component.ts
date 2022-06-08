@@ -169,7 +169,7 @@ export class SaleComponent implements OnInit {
       : { orderno: 1, timestamp: 0, GSTno: '' }
     this.Auth.getloginfo().subscribe(data => {
       this.loginfo = data
-      this.order = new OrderModule(6)
+      this.order = new OrderModule(1)
       this.sync.sync()
       this.products = []
       this.getproducts()

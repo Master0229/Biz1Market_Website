@@ -5,6 +5,7 @@ import { AuthService } from 'src/app/auth.service'
 import { Location } from '@angular/common'
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
+import * as moment from 'moment'
 
 @Component({
   selector: 'app-products',
@@ -13,12 +14,13 @@ import { map } from 'rxjs/operators'
 })
 export class ProductsComponent implements OnInit {
   CompanyId: any
+  StoreId: any
   id: any
   taxgroups: any
   taxGroupId: number
   producttypes: any
   units: any
-  kotgroups: any
+  // kotgroups: any
   categories: any
   masterproduct: any = []
   show = true
@@ -32,7 +34,7 @@ export class ProductsComponent implements OnInit {
     taxGroupId: 0,
     productTypeId: 0,
     unitId: 0,
-    kotGroupId: 0,
+    // kotGroupId: 0,
     price: null,
     productCode: null,
     CompanyId: 1,
@@ -90,12 +92,29 @@ export class ProductsComponent implements OnInit {
   //   this.nzContextMenuService.close()
   // }
   ngOnInit(): void {
+    const user = JSON.parse(localStorage.getItem('user'))
+    const store = JSON.parse(localStorage.getItem('store'))
+    this.CompanyId = user.companyId
+    this.StoreId = user.storeid
     this.getMasterproduct()
     this.gettax()
     this.getproducttype()
     this.getUnits()
-    this.getKotGroups()
+    // this.getKotGroups()
     this.getCategories()
+
+    // this.Auth.getdbdata(['loginfo', 'printersettings']).subscribe(data => {
+    //   this.loginfo = data['loginfo'][0]
+    //   this.CompanyId = this.loginfo.companyId
+    //   this.StoreId = this.loginfo.storeId
+    //   console.log(this.loginfo)
+    //   this.getMasterproduct()
+    //   this.gettax()
+    //   this.getproducttype()
+    //   this.getUnits()
+    //   // this.getKotGroups()
+    //   this.getCategories()
+    // })
   }
   open(): void {
     this.visible = true
@@ -127,20 +146,34 @@ export class ProductsComponent implements OnInit {
     })
   }
 
+  showInactive: Boolean = false
   changefilter(bool) {
+    this.showInactive = bool
     console.log(bool)
     if (bool) {
-      this.prod = this.masterproduct.products
+      this.prod = this.masterproduct.products.filter(x => !x.isactive)
     } else {
       this.prod = this.masterproduct.products.filter(x => x.isactive)
     }
     console.log(this.prod.length)
   }
 
+  strdate: string
+  enddate: string
+  date: { year: number; month: number }
+  dateRange = []
+
+  onChange(result: Date): void {
+    console.log('onChange: ', result)
+    this.strdate = moment(result[0]).format('YYYY-MM-DD')
+    this.enddate = moment(result[1]).format('YYYY-MM-DD')
+    this.getMasterproduct()
+  }
+
   getMasterproduct() {
-    this.Auth.getProduct(this.id, (this.CompanyId = 1)).subscribe(data => {
+    this.Auth.getProduct(this.id, this.CompanyId, this.strdate, this.enddate).subscribe(data => {
       this.masterproduct = data
-      this.prod = this.masterproduct.products.filter(x => x.isactive)
+      this.prod = this.masterproduct.products.filter(x => x.isactive == !this.showInactive)
       console.log(this.prod)
     })
   }
@@ -148,7 +181,7 @@ export class ProductsComponent implements OnInit {
     this.Auth.GetTaxGrp(this.CompanyId).subscribe(data => {
       this.taxgroups = data
       this.product.taxGroupId = this.taxgroups[0].id
-      // console.log(this.taxgroups);
+      console.log(this.taxgroups)
     })
   }
   getproduct(id) {
@@ -192,15 +225,15 @@ export class ProductsComponent implements OnInit {
       // console.log(data);
     })
   }
-  getKotGroups() {
-    this.Auth.getKotgroups().subscribe(data => {
-      this.kotgroups = data
-      this.product.kotGroupId = this.kotgroups[0].id
-      // console.log(data);
-    })
-  }
+  // getKotGroups() {
+  //   this.Auth.getKotgroups().subscribe(data => {
+  //     this.kotgroups = data
+  //     this.product.kotGroupId = this.kotgroups[0].id
+  //     // console.log(data);
+  //   })
+  // }
   getCategories() {
-    this.Auth.getcategories(1, 'A').subscribe(data => {
+    this.Auth.getcategories(this.CompanyId, 'A').subscribe(data => {
       this.categories = data
       this.product.categoryId = this.categories[0].id
       this.getMasterproduct()
@@ -236,15 +269,16 @@ export class ProductsComponent implements OnInit {
       taxGroupId: 0,
       productTypeId: 0,
       unitId: 0,
-      kotGroupId: 0,
+      // kotGroupId: 0,
       price: null,
       productCode: null,
-      CompanyId: 1,
+      // CompanyId: 1,
       action: '',
     }
   }
   submitted: boolean = false
   addProduct() {
+    this.product.CompanyId = this.CompanyId
     this.submitted = true
     if (this.validation()) {
       if (this.product.id == 0) {
@@ -261,6 +295,7 @@ export class ProductsComponent implements OnInit {
               this.Auth.updateproductdb().subscribe(data2 => {
                 this.notification.success('Product Added', 'Product Added Successfully')
                 this.show = !this.show
+                this.getMasterproduct()
               })
             })
           } else if (this.datasavetype == '2') {
@@ -434,11 +469,13 @@ export class ProductsComponent implements OnInit {
   //   console.log(this.masterproduct)
   // }
 
-  // filteredvalues = [];
-  // filtersearch(): void {
-  //   this.filteredvalues = this.term
-  //     ? this.masterproduct.filter(x => x.name.toLowerCase().includes(this.term.toLowerCase()))
-  //     : this.masterproduct;
-  //   console.log(this.filteredvalues)
-  // }
+  filteredvalues = []
+  filtersearch(): void {
+    this.prod = this.term
+      ? this.masterproduct.products.filter(x =>
+          x.name.toLowerCase().includes(this.term.toLowerCase()),
+        )
+      : this.masterproduct.products
+    console.log(this.prod)
+  }
 }

@@ -133,9 +133,9 @@ const routes: Routes = [
     data: { title: 'DispatchItem App' },
   },
   {
-    path: 'DispatchOrders',
+    path: 'ReceiveOrders',
     component: ReceiveOrdComponent,
-    data: { title: 'DispatchOrders App' },
+    data: { title: 'ReceiveOrders App' },
   },
   {
     path: 'editreceive/:id',
@@ -154,7 +154,7 @@ const routes: Routes = [
     data: { title: 'Vendors App' },
   },
   {
-    path: 'dispatch/:id',
+    path: 'dispatch',
     component: DispatchComponent,
     data: { title: 'Dispatch App' },
   },

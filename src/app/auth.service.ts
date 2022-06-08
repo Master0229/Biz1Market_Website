@@ -9,6 +9,8 @@ import { throwError } from 'rxjs'
 })
 export class AuthService {
   base_url1 = 'https://localhost:44315/api/'
+  // base_url1 = 'https://localhost:44382/api/'
+  // base_url1 = 'https://localhost:7251/api/'
   base_url = 'http://biz1retail.azurewebsites.net/api/'
   server_ip = 'http://localhost'
   dburl = 'http://localhost:8081/'
@@ -180,16 +182,16 @@ export class AuthService {
     return this.http.post(this.server_ip + ':8081/addmasterproduct?userid=13', product)
   }
   getvariants(CompanyId) {
-    // return this.http.get(this.base_url1 + 'Product/getvariants?CompanyId=1')
-    return this.http.get(this.server_ip + ':8081/masteroption?CompanyId=1')
+    return this.http.get(this.base_url1 + 'Product/getvariants?CompanyId=' + CompanyId)
+    // return this.http.get(this.server_ip + ':8081/masteroption?CompanyId=1')
   }
   addVariants(variant) {
     // return this.http.post(this.base_url1 + 'Product/addvariant',variant)
     return this.http.post(this.server_ip + ':8081/addmasteroption', variant)
   }
   getvariantgroups(CompanyId) {
-    // return this.http.get(this.base_url1 + 'Product/getvariantgroups?CompanyId=1')
-    return this.http.get(this.server_ip + ':8081/masteroptiongroup?CompanyId=1')
+    return this.http.get(this.base_url1 + 'Product/getvariantgroups?CompanyId=' + CompanyId)
+    // return this.http.get(this.server_ip + ':8081/masteroptiongroup?CompanyId=' + CompanyId)
   }
   addVariantGroups(variantgroup) {
     // return this.http.post(this.base_url1 + 'Product/addvariantgroup',variantgroup)
@@ -282,12 +284,15 @@ export class AuthService {
   editInternalord(id) {
     return this.http.get(this.base_url1 + 'Internal/EditInternalOrd?id=' + id)
   }
+  corsTest(ord) {
+    return this.http.post(this.base_url1 + 'Internal/corsTest', ord)
+  }
   dispatch(ord) {
     return this.http.post(this.base_url1 + 'Internal/OrdDispatch', ord)
   }
-  getStockContainer(CompanyId, storeId) {
+  getStockContainer(CompanyId, StoreId) {
     return this.http.get(
-      this.base_url1 + 'Internal/getStockContainer?CompanyId=' + CompanyId + '&storeId=' + storeId,
+      this.base_url1 + 'Internal/getStockContainer?CompanyId=' + CompanyId + '&storeId=' + StoreId,
     )
   }
   Update(ord) {
@@ -339,8 +344,10 @@ export class AuthService {
     return this.http.post(this.base_url1 + 'Internal/UpdateReceiveOrd', ord)
   }
 
-  getOrdDisp(OrdPrd) {
-    return this.http.post(this.base_url1 + 'Internal/getDispatchList', OrdPrd)
+  getOrdDisp(storeId, companyId) {
+    return this.http.get(
+      this.base_url1 + 'Internal/getDispatchList?storeId=' + storeId + '&companyId=' + companyId,
+    )
   }
   Creditpay(paycred) {
     return this.http.post(this.base_url1 + 'CreditTrx/PayCredit', paycred)
@@ -488,8 +495,18 @@ export class AuthService {
   prdactive(Id, active) {
     return this.http.get(this.base_url1 + 'Product/UpdateAct?Id=' + Id + '&active=' + active)
   }
-  getProduct(id, compId) {
-    return this.http.get(this.base_url1 + 'Product/GetById?id=' + id + '&compId=' + compId)
+  getProduct(id, compId, fromdate, todate) {
+    return this.http.get(
+      this.base_url1 +
+        'Product/GetById?id=' +
+        id +
+        '&compId=' +
+        compId +
+        '&fromdate=' +
+        fromdate +
+        '&todate=' +
+        todate,
+    )
   }
   getloginfo() {
     return this.http.get(this.server_ip + ':8081/getloginfo')
@@ -718,13 +735,18 @@ export class AuthService {
     return this.http.post(this.base_url1 + 'TaxGroup/UpdateTaxGrp', taxgroup)
   }
   //Queen 29-01-2022
-  getorderlist() {
-    return this.http.get(this.base_url1 + 'Internal/getOrderList?companyId=1' + '&numRecords=50')
+  // 06-06-2022
+  getorderlist(storeId) {
+    return this.http.get(
+      this.base_url1 + 'Internal/getOrderList?storeId=' + storeId + '&numRecords=50',
+    )
   }
 
   // Queen 31-01-2022
-  getstoreIdInternal(Id) {
-    return this.http.get(this.base_url1 + 'Internal/GetstorebyId?CompanyId=1&Id=' + Id)
+  getstoreIdInternal(CompanyId, Id) {
+    return this.http.get(
+      this.base_url1 + 'Internal/GetstorebyId?CompanyId=' + CompanyId + '&Id=' + Id,
+    )
   }
 
   // Master
@@ -746,5 +768,31 @@ export class AuthService {
   }
   gettransaction(OrderId) {
     return this.http.get(this.base_url1 + 'Receipt/getByOrderId?OrderId=' + OrderId)
+  }
+
+  // Master
+  // 18-02-2022
+  GetDispatchList() {
+    return this.http.get(
+      this.base_url1 + 'Internal/GetDispatchList?companyId=1' + '&StoreId=26' + '&numRecords=25',
+    )
+  }
+
+  // 06-06-2022
+  getOrderIdinternal(OrdId) {
+    return this.http.get(this.base_url1 + 'Internal/internalordbyid?orderid=' + OrdId)
+  }
+  GetDispatch(companyId, storeId) {
+    return this.http.get(
+      this.base_url1 +
+        'Internal/GetDispatch?companyId=' +
+        companyId +
+        '&StoreId=' +
+        storeId +
+        '&numRecords=25',
+    )
+  }
+  getreceivebyid(OrdId) {
+    return this.http.get(this.base_url1 + 'Internal/receivebyid?orderid=' + OrdId)
   }
 }

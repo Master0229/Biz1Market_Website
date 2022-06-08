@@ -1,14 +1,13 @@
 import { Component, OnInit, TemplateRef, ViewChild, ElementRef, HostListener } from '@angular/core'
 import * as moment from 'moment'
-import { FormControl, Validators } from '@angular/forms'
-import { NzModalService } from 'ng-zorro-antd/modal'
+
 import { NgbModal, ModalDismissReasons, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap'
 import { AuthService } from 'src/app/auth.service'
 import { NzNotificationService } from 'ng-zorro-antd'
 import { merge, Observable, Subject } from 'rxjs'
 import { Router, ActivatedRoute } from '@angular/router'
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators'
-import { OrderItemModule, OrderModule, DispatchModule } from './dispatch.module'
+import { OrderModule, DispatchModule, BillModule, OrderItemModule } from './dispatch.module'
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast'
 import { Location } from '@angular/common'
 
@@ -50,6 +49,8 @@ export class DispatchComponent implements OnInit {
   model: any = 'QWERTY'
   order: OrderModule
   Disp: DispatchModule
+  orderItem: OrderItemModule
+  Bill: BillModule
   inputValue: string = ''
   focus$ = new Subject<string>()
   click$ = new Subject<string>()
@@ -105,6 +106,7 @@ export class DispatchComponent implements OnInit {
   paymenttypeid = 1
   isuppercase: boolean = false
   WaiterId = null
+  prd: any
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
     let data = this.buffer || ''
@@ -145,17 +147,18 @@ export class DispatchComponent implements OnInit {
   OrdItemId = 0
   searchTerm = ''
   tax = 0
-  DispatchById = null
+  DispatchById = 0
   discount = 0
   isVisible = false
   batchno = 5
-  isShown = false
+  isShown = true
+  isTable = false
   isTab = true
   ordNo = 0
   storeId = 0
   orderDate = ''
   CustomerAddressId = null
-  CompanyId = 1
+  CompanyId: any
   CustomerId = null
   InvoiceNo = 0
   sourceId = 0
@@ -200,7 +203,7 @@ export class DispatchComponent implements OnInit {
   OrdId = 0
   dispatchTypeId = 1
   StkContainerName = ''
-  StoreId = null
+  StoreId: any
   // ContainerName ='';
   act = 'Chk'
   users = []
@@ -209,6 +212,7 @@ export class DispatchComponent implements OnInit {
   numRecordsStr = 50
   dispatchStatus = 1
   Ordprd: any = []
+  loginfo
   tableData = [
     {
       key: '1',
@@ -255,11 +259,12 @@ export class DispatchComponent implements OnInit {
     ContainerName: '',
   }
   barcodemode: boolean = false
-  customerdetails = { data_state: '', name: '', PhoneNo: '', email: '', address: '', companyId: 1 }
+  customerdetails = { data_state: '', name: '', PhoneNo: '', email: '', address: '', companyId: 0 }
   customers: any = []
   ContainWgt: null
   StockContainerId: null
   createby: ''
+  billId: 0
   array: any = []
   // quantityfc = new FormControl('', [Validators.required, Validators.min(1)]);
 
@@ -311,26 +316,18 @@ export class DispatchComponent implements OnInit {
 
   formatterreceiver = (x: { name: string }) => x.name
 
-  getorderPrd() {
-    // var array = [];
+  isEditting: boolean = false
+
+  getorderPrd(orderId) {
+    this.isEditting = true
+    this.OrdId = orderId
     if (this.OrdId != 0) {
       this.Auth.getorderPrd(this.CompanyId, this.OrdId).subscribe(data => {
         this.ordPrdDetails = data
         console.log('hhhhhhhhhhrtughggg', this.ordPrdDetails)
-        this.ordPrdDetails.orderItem.forEach(element => {
+        this.ordPrdDetails.orderProd.forEach(element => {
           element.Action = 'Chk'
-          // this.OrdItemId = element.id;
-          // element["DispatchProductId"] = element.productId
-          // element["ProductId"] = element.productId
-          // element["Dispatchprd"] = element.description
-          // element["ProductName"] = element.description
-          // element["Pricee"] = element.price
-          // element["Tax1"] = element.tax1
-          // element["Tax2"] = element.tax2
-          // element["Tax3"] = element.tax3
-          // element["Tax4"] = element.tax3
           ;(element['Action'] = 'Chk'), (element['ordItemType'] = 2)
-          // this.StoreId = element.order.storeId;
           this.array.push({
             CompanyId: element['companyId'],
             ContainerId: element['containerId'],
@@ -346,8 +343,6 @@ export class DispatchComponent implements OnInit {
             Price: element['unitPrice'],
             Tax1: element['tax1'],
             Tax2: element['tax2'],
-            Tax3: element['tax2'],
-            Tax4: element['tax2'],
             Action: element['Action'],
             OrderItemId: element['orderItemId'],
             OrderId: element['orderId'],
@@ -366,33 +361,63 @@ export class DispatchComponent implements OnInit {
         this.OrderedBy = this.ordPrdDetails.order[0].orderedBy
         this.StoreId = this.ordPrdDetails.order[0].storeId
         console.log('array', this.array)
-        console.log('ordPrdDetails', this.ordPrdDetails)
+        // console.log('ordPrdDetails', this.ordPrdDetails)
       })
     }
   }
+  getorderedList: any
+  NewArr: any = []
+  deleteOrder(Id) {
+    console.log('delete', Id)
+    console.log(this.NewArr)
+    this.Auth.deleteItem({ companyId: this.CompanyId, orderId: Id }).subscribe(data => {
+      this.getorderedList = data
+      console.log('delete', data)
+      this.GetDispatchList()
+    })
+  }
 
   getBarcodeProduct() {
-    this.Auth.getBarcodeProduct(this.CompanyId, 0).subscribe(data => {
+    this.Auth.getBarcodeProduct(this.CompanyId, this.StoreId).subscribe(data => {
       console.log(data)
       this.products = data['products']
       this.batchno = data['lastbatchno'] + 1
     })
   }
   getStockContainer() {
-    this.Auth.getStockContainer(this.CompanyId, 8).subscribe(data => {
+    this.Auth.getStockContainer(this.CompanyId, this.StoreId).subscribe(data => {
       console.log('Stocks', data)
       this.Stocks = data
     })
   }
 
   ngOnInit(): void {
+    const user = JSON.parse(localStorage.getItem('user'))
+    const store = JSON.parse(localStorage.getItem('store'))
+    this.CompanyId = user.companyId
+    this.StoreId = user.storeid
     this.order = new OrderModule(2, this.OrdId)
     this.products = []
     this.getBarcodeProduct()
     this.getStockContainer()
     this.getStoreList()
+    this.GetDispatchList()
+
+    // this.Auth.getdbdata(['loginfo']).subscribe(data => {
+    //   this.loginfo = data['loginfo'][0]
+    //   this.StoreId = this.StoreId
+    //   this.CompanyId = this.CompanyId
+    //   console.log(this.loginfo)
+    //   this.order = new OrderModule(2, this.OrdId)
+    //   this.products = []
+    //   this.getBarcodeProduct()
+    //   this.getStockContainer()
+    //   this.getStoreList()
+    //   this.GetDispatchList()
+    // })
+
     // this.getord();
-    this.getorderPrd()
+    // this.getorderPrd()
     // this.products = JSON.parse(localStorage.getItem("Product"));
     this.products.forEach(product => {
       product.quantity = null
@@ -400,12 +425,12 @@ export class DispatchComponent implements OnInit {
       product.amount = 0
     })
   }
-  getOrderList() {
-    this.Auth.getorder(this.Ordprd).subscribe(data => {
-      this.OrdData = data
-      console.log('OrdData', this.OrdData)
-    })
-  }
+  // getOrderList() {
+  //   this.Auth.getorder(this.Ordprd).subscribe(data => {
+  //     this.OrdData = data
+  //     console.log('OrdData', this.OrdData)
+  //   })
+  // }
 
   setproductbybarcode(data) {}
   barcodereaded(event) {
@@ -444,13 +469,13 @@ export class DispatchComponent implements OnInit {
     this.order.setbillamount()
   }
   settotalprice(i, qty) {
-    this.cartitems[i].amount = this.cartitems[i].Price * this.cartitems[i].DispatchQty
+    this.cartitems[i].amount = this.cartitems[i].Price * this.cartitems[i].orderQuantity
     this.cartitems[i].tax =
       (this.cartitems[i].amount * (this.cartitems[i].Tax1 + this.cartitems[i].Tax2)) / 100
     console.log(
       i,
       this.cartitems[i].Price,
-      this.cartitems[i].DispatchQty,
+      this.cartitems[i].orderQuantity,
       this.cartitems[i].amount,
       qty,
     )
@@ -502,23 +527,30 @@ export class DispatchComponent implements OnInit {
     console.log(this.temporaryItem)
     this.quantityel['nativeElement'].focus()
   }
-  selectItem(item) {
-    console.log('item', item)
-    // console.log(item,Object.assign({},this.temporaryItem))
-    // Object.keys(item).forEach(key => {
-    //   this.temporaryItem[key] = item[key]
-    // })
-    // console.log(this.temporaryItem)
-    this.ContainWgt = item.containerWight
-    this.StockContainerId = item.stockContainerId
-    this.StkContainerName = item.stockContainerName
-    this.createby = item.createdBy
-    this.addItem()
-  }
+  // selectItem(item) {
+  //   console.log(item)
+  //   // console.log(item,Object.assign({},this.temporaryItem))
+  //   // Object.keys(item).forEach(key => {
+  //   //   this.temporaryItem[key] = item[key]
+  //   // })
+  //   // console.log(this.temporaryItem)
+  //   this.ContainWgt = item.containerWight
+  //   this.StockContainerId = item.stockContainerId
+  //   this.StkContainerName = item.stockContainerName
+  //   this.createby = item.createdBy
+  //   this.addItem()
+  // }
   selecteddispatchitem(item) {
     console.log('item', item)
     this.DispatchById = item.id
     // this.order.push({OrdNo:item.id})
+  }
+  productbybarcode = []
+  barcode = ''
+  searchbybarcode() {
+    this.productbybarcode = this.products.filter(x => x.barCode == this.barcode)[0]
+    console.log(this.barcode, this.productbybarcode, this.products)
+    this.model = this.productbybarcode['product']
   }
   addItem() {
     console.log('temporaryItem', this.temporaryItem)
@@ -537,10 +569,8 @@ export class DispatchComponent implements OnInit {
         )[0].OrderQuantity += this.temporaryItem.Quantity
         this.order.setbillamount()
       } else {
-        this.order.FoodReady = this.FoodReady
         this.order.OrderType = this.OrderType
         this.order.SpecialOrder = this.SpecialOrder
-        this.order.DiscAmount = this.DiscAmount
         this.order.DiscPercent = this.DiscPercent
         this.order.PreviousStatusId = this.PreviousStatusId
         this.order.ProdStatus = '1'
@@ -588,7 +618,7 @@ export class DispatchComponent implements OnInit {
     console.log(id)
     this.Auth.editInternalord(id).subscribe(data => {
       console.log(data)
-      this.getOrderList()
+      this.GetDispatchList()
     })
   }
   deleteItem(item) {
@@ -597,6 +627,7 @@ export class DispatchComponent implements OnInit {
       console.log('delete', data)
     })
   }
+
   OrdDispatch() {
     this.order.BillDate = moment().format('YYYY-MM-DD HH:MM A')
     this.order.CreatedDate = moment().format('YYYY-MM-DD HH:MM A')
@@ -605,12 +636,13 @@ export class DispatchComponent implements OnInit {
     this.order.OrderedDateTime = moment().format('YYYY-MM-DD HH:MM A')
     this.order.DeliveryDateTime = moment().format('YYYY-MM-DD HH:MM A')
     this.order.ModifiedDate = moment().format('YYYY-MM-DD HH:MM A')
+    this.order.setbillamount()
     var finalarray = [...this.array, ...this.order.Items]
     this.Disp = new DispatchModule(
       this.OrdId,
       this.OrderedById,
       this.SuppliedById,
-      this.DispatchById,
+      (this.DispatchById = null),
       this.dispatchTypeId,
       finalarray,
       this.orderDate,
@@ -618,16 +650,25 @@ export class DispatchComponent implements OnInit {
       this.createby,
       this.order.OrderDetail,
       this.OrdItemId,
+      this.CompanyId,
+      this.billId,
     )
     console.log('finalarray', finalarray)
     console.log('final5555array', this.Disp)
-    this.Auth.dispatch(this.Disp).subscribe(data => {
-      console.log('temporry', data)
-      this.isShown = !this.isShown
-      this.isTab = !this.isTab
-      this.getOrderList()
+    this.Auth.corsTest(this.Disp).subscribe(data => {
+      console.log(data)
     })
+    // this.Auth.dispatch(this.Disp).subscribe(data => {
+    //   console.log('temporry', data)
+    //   this.notification.success('Dispatch Updated', 'Dispatch Updated Successfully')
+    //   this.GetDispatchList()
+    // })
+    this.order.setbillamount()
+    // this.order.add(this.prd)
+
+    this.isEditting = false
   }
+
   openDetailpopup(contentdetail, id) {
     this.Ordprd.push({
       companyId: this.CompanyId,
@@ -661,7 +702,71 @@ export class DispatchComponent implements OnInit {
         reason => {},
       )
   }
+
+  Tabledata: []
+  getdispatchList: any = []
+  GetDispatchList() {
+    this.Auth.GetDispatch(this.CompanyId, this.StoreId).subscribe(data => {
+      this.getdispatchList = data['orders']
+      this.Tabledata = this.getdispatchList
+      console.log(this.Tabledata)
+      console.log(this.getdispatchList)
+      this.StoreByidInternal(0)
+    })
+  }
+
+  term: string = ''
+  filtersearch(): void {
+    this.Tabledata = this.term
+      ? this.getdispatchList.filter(x =>
+          x.description.toLowerCase().includes(this.term.toLowerCase()),
+        )
+      : this.getdispatchList
+    console.log(this.Tabledata)
+  }
+
+  StoreByidInternal(storeId) {
+    this.Auth.getstoreIdInternal(this.CompanyId, storeId).subscribe(data => {
+      const stores = data['storeList']
+      this.getdispatchList.forEach(order => {
+        order.supplier = stores.filter(x => x.id == order.SuppliedById)[0]?.name
+        order.receiver = stores.filter(x => x.id == order.OrderedById)[0]?.name
+      })
+    })
+  }
+
+  quantitychange(Items: OrderItemModule, event) {
+    console.log(Items, this.validation())
+    console.log(this.products)
+    // if (this.validation()) {
+    var prod = this.products.filter(x => x.stockBatchId == Items.stockBatchId)[0]
+    // console.log(Items.OrderQuantity, prod.maxqty)
+    // console.log(this.products)
+    if (Items.OrderQuantity && Items.OrderQuantity <= prod.maxqty) {
+      // console.log('%c GOOD! ', 'color: #bada55')
+      this.products.filter(x => x.stockBatchId == Items.stockBatchId)[0].quantity =
+        prod.maxqty - Items.OrderQuantity
+      this.order.setbillamount()
+    } else if (Items.OrderQuantity == 0 || Items.OrderQuantity == null) {
+      event.preventDefault()
+      // console.log('%c VERY LOW! ', 'color: orange')
+      Items.OrderQuantity = 1
+      this.products.filter(x => x.stockBatchId == Items.stockBatchId)[0].quantity = prod.maxqty - 1
+      this.order.setbillamount()
+    } else {
+      event.preventDefault()
+      // console.log('%c EXCEED! ', 'color: red')
+      Items.OrderQuantity = 1
+      this.products.filter(x => x.stockBatchId == Items.stockBatchId)[0].quantity = prod.maxqty - 1
+      this.order.setbillamount()
+    }
+    // }
+    // console.log(Items.OrderQuantity)
+    // this.calculate()
+    this.buffer = ''
+  }
 }
+
 // getErrorMessage() {
 //   if (this.quantityfc.hasError('required')) {
 //     return "Quantity can't be Empty";
