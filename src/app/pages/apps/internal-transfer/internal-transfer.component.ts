@@ -88,23 +88,26 @@ export class InternalTransferComponent implements OnInit {
 
   formattersupplier = (x: { name: string }) => x.name
 
-  selectedreceiveritem(item) {
-    console.log('item', item)
-    this.OrderedById = item.id
-  }
-  searchreceiver = (text$: Observable<string>) =>
-    text$.pipe(
-      debounceTime(200),
-      map(term =>
-        term === ''
-          ? []
-          : this.stores.storeList
-              .filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1)
-              .slice(0, 10),
-      ),
-    )
+  // Master
+  // 14-06-2022
+  // selectedreceiveritem(item) {
+  //   console.log('item', item)
+  //   this.OrderedById = item.id
+  // }
 
-  formatterreceiver = (x: { name: string }) => x.name
+  // searchreceiver = (text$: Observable<string>) =>
+  //   text$.pipe(
+  //     debounceTime(200),
+  //     map(term =>
+  //       term === ''
+  //         ? []
+  //         : this.stores.storeList
+  //             .filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1)
+  //             .slice(0, 10),
+  //     ),
+  //   )
+
+  // formatterreceiver = (x: { name: string }) => x.name
 
   // @ViewChild('cardnumber', { static: false }) cardnumber: ElementRef;
   buffer = ''
@@ -359,7 +362,7 @@ export class InternalTransferComponent implements OnInit {
     this.order.ProdStatus = '1'
     this.order.WipStatus = '1'
     this.order.OrderStatusId = this.OrderStatusId
-    this.order.OrderedById = this.OrderedById
+    this.order.OrderedById = this.StoreId
     this.order.SuppliedById = this.SuppliedById
     this.order.OrderType = this.OrderType
     this.order.SpecialOrder = this.SpecialOrder
@@ -423,10 +426,10 @@ export class InternalTransferComponent implements OnInit {
       searchId: this.ordId,
       numRecordsStr: this.numRecordsStr,
     })
-    this.Auth.getorder(this.Ordprd).subscribe(data => {
-      this.OrdData = data
-      console.log('OrdData', this.OrdData)
-    })
+    // this.Auth.getorder(this.Ordprd).subscribe(data => {
+    //   this.OrdData = data
+    //   console.log('OrdData', this.OrdData)
+    // })
   }
   setproductbybarcode(code) {
     // console.log("code",code, this.products.filter(x => x.Product == code));
@@ -741,10 +744,10 @@ export class InternalTransferComponent implements OnInit {
   getorderedList: any = []
   Getorderlist() {
     this.Auth.getorderlist(this.StoreId).subscribe(data => {
-      this.getorderedList = data['orders']
+      this.getorderedList = data['order']
       this.tabledata = this.getorderedList
       console.log(this.getorderedList)
-      this.StoreByIdInternal(0)
+      // this.StoreByIdInternal(0)
     })
   }
   tabledata: []

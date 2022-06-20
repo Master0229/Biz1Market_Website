@@ -20,7 +20,7 @@ export class CreditComponent implements OnInit {
   isShown = true
   isTable = false
   users = []
-  CompanyId = 1
+  CompanyId: any
   stores: any = []
   paymentType: any = []
   creditData: any = []
@@ -76,6 +76,7 @@ export class CreditComponent implements OnInit {
     TransDate: moment().format('YYYY-MM-DD HH:MM A'),
     CreatedDate: moment().format('YYYY-MM-DD HH:MM A'),
   }
+  StoreId: any
   // contactId:this.contactId,
   // responsibleById:this.DispatchById, contactType:this.contacttype,
   constructor(
@@ -90,6 +91,10 @@ export class CreditComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const user = JSON.parse(localStorage.getItem('user'))
+    const store = JSON.parse(localStorage.getItem('store'))
+    this.CompanyId = user.companyId
+    this.StoreId = user.storeid
     this.getStoreList()
     this.getcreditData('ALL')
     this.getPaymentTypesList()

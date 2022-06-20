@@ -8,10 +8,10 @@ import { throwError } from 'rxjs'
   providedIn: 'root',
 })
 export class AuthService {
-  base_url1 = 'https://localhost:44315/api/'
+  base_url = 'https://localhost:44315/api/'
   // base_url1 = 'https://localhost:44382/api/'
   // base_url1 = 'https://localhost:7251/api/'
-  base_url = 'http://biz1retail.azurewebsites.net/api/'
+  base_url1 = 'https://biz1retail.azurewebsites.net/api/'
   server_ip = 'http://localhost'
   dburl = 'http://localhost:8081/'
   constructor(private http: HttpClient) {
@@ -270,9 +270,9 @@ export class AuthService {
         companyId,
     )
   }
-  getorder(ordId) {
-    return this.http.post(this.base_url1 + 'Internal/getOrderList', ordId)
-  }
+  // getorder(ordId) {
+  //   return this.http.post(this.base_url1 + 'Internal/getOrderList', ordId)
+  // }
   getorderPrd(compid, ordId) {
     return this.http.get(
       this.base_url1 + 'Internal/GetOrderedItems?CompanyId=' + compid + '&orderId=' + ordId,

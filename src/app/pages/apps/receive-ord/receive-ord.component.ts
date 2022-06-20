@@ -316,11 +316,12 @@ export class ReceiveOrdComponent implements OnInit {
       NumRecords: this.numRecordsStr,
       dispatchStatus: this.dispatchStatus,
     })
-    this.Auth.getorder(this.Ordprd).subscribe(data => {
-      this.ordDetails = data
-      if (this.billStatus == 3) {
-      }
-    })
+    // this.Auth.getorder(this.Ordprd).subscribe(data => {
+    //   this.ordDetails = data;
+    //   if (this.billStatus == 3) {
+
+    //   }
+    // })
   }
   recStatus(Value) {
     console.log('recStatus', Value)
@@ -334,7 +335,7 @@ export class ReceiveOrdComponent implements OnInit {
   }
 
   getStockContainer() {
-    this.Auth.getStockContainer(this.CompanyId, 8).subscribe(data => {
+    this.Auth.getStockContainer(this.CompanyId, this.StoreId).subscribe(data => {
       console.log('Stocks', data)
       this.Stocks = data
     })
@@ -442,13 +443,14 @@ export class ReceiveOrdComponent implements OnInit {
     this.StoreId = user.storeid
     this.order = new OrderModule(2, this.OrdId)
     this.products = []
+
     this.getStockContainer()
     this.getdispatch()
 
     // this.Auth.getdbdata(['loginfo']).subscribe(data => {
     //   this.loginfo = data['loginfo'][0]
     //   this.StoreId = this.loginfo.storeId
-    //   this.CompanyId = this.CompanyId
+    //   this.CompanyId = this.loginfo.companyId
     //   console.log(this.loginfo)
     //   this.order = new OrderModule(2, this.OrdId)
     //   this.products = [];
@@ -511,48 +513,12 @@ export class ReceiveOrdComponent implements OnInit {
     console.log('finalarray', finalarray)
     console.log('receive', this.RecData)
     console.log('finalarray', finalarray)
-    // this.Auth.receive(this.RecData).subscribe(data => {
-    //   console.log("temporry", data)
-    //  })
+
     this.Auth.Ordrecve(this.RecData).subscribe(data => {
       console.log('temporry', data)
     })
     this.router.navigate(['/apps/internaltransfer'])
   }
-  // openDetailpopup(contentdetail, id) {
-  //   this.Ordprd.push({
-  //     companyId: this.CompanyId,
-  //     orderId: id,
-  //     UserId: this.users[0].id,
-  //     dispatchType: this.dispatchType,
-  //     billStatus: this.billStatus,
-  //     NumRecords: this.numRecordsStr
-  //   })
-  //   this.Auth.getorder(this.Ordprd).subscribe(data => {
-  //     this.popupData = data;
-  //     console.log("popupData", this.popupData)
-  //   })
-  //   this.TotalProductSale = 0;
-  //   this.TotalPrdQty = 0;
-
-  //   for (let i = 0; i < this.popupData.order.length; i++) {
-  //     this.TotalProductSale = this.TotalProductSale + this.popupData.order[i].totalsales;
-  //     this.TotalPrdQty = this.TotalPrdQty + this.popupData.order[i].qty;
-  //     this.TotalProductSale = +(this.TotalProductSale.toFixed(2))
-  //     this.TotalPrdQty = +(this.TotalPrdQty.toFixed(2))
-  //   }
-  //   const modalRef = this.modalService
-  //     .open(contentdetail, {
-  //       ariaLabelledBy: "modal-basic-title",
-  //       centered: true
-  //     })
-  //     .result.then(
-  //       result => {
-  //       },
-  //       reason => {
-  //       }
-  //     );
-  // }
 
   orders: any = null
 

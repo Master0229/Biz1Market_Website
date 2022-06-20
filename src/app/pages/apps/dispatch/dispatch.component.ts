@@ -655,14 +655,14 @@ export class DispatchComponent implements OnInit {
     )
     console.log('finalarray', finalarray)
     console.log('final5555array', this.Disp)
-    this.Auth.corsTest(this.Disp).subscribe(data => {
-      console.log(data)
-    })
-    // this.Auth.dispatch(this.Disp).subscribe(data => {
-    //   console.log('temporry', data)
-    //   this.notification.success('Dispatch Updated', 'Dispatch Updated Successfully')
-    //   this.GetDispatchList()
+    // this.Auth.corsTest(this.Disp).subscribe(data => {
+    //   console.log(data)
     // })
+    this.Auth.dispatch(this.Disp).subscribe(data => {
+      console.log('temporry', data)
+      this.notification.success('Dispatch Updated', 'Dispatch Updated Successfully')
+      this.GetDispatchList()
+    })
     this.order.setbillamount()
     // this.order.add(this.prd)
 
@@ -679,10 +679,10 @@ export class DispatchComponent implements OnInit {
       numRecordsStr: this.numRecordsStr,
       dispatchStatus: this.dispatchStatus,
     })
-    this.Auth.getorder(this.Ordprd).subscribe(data => {
-      this.popupData = data
-      console.log('popupData', this.popupData)
-    })
+    // this.Auth.getorder(this.Ordprd).subscribe(data => {
+    //   this.popupData = data
+    //   console.log('popupData', this.popupData)
+    // })
     this.TotalProductSale = 0
     this.TotalPrdQty = 0
 
@@ -707,11 +707,10 @@ export class DispatchComponent implements OnInit {
   getdispatchList: any = []
   GetDispatchList() {
     this.Auth.GetDispatch(this.CompanyId, this.StoreId).subscribe(data => {
-      this.getdispatchList = data['orders']
+      this.getdispatchList = data['order']
       this.Tabledata = this.getdispatchList
-      console.log(this.Tabledata)
       console.log(this.getdispatchList)
-      this.StoreByidInternal(0)
+      // this.StoreByidInternal(0)
     })
   }
 

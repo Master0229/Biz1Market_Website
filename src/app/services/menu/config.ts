@@ -175,11 +175,11 @@ export const getMenuData: any[] = [
         key: 'appsDispatch',
         url: '/apps/dispatch',
       },
-      // {
-      //   title: 'Dispatch Items',
-      //   key: 'appsDispatchItem',
-      //   url: '/apps/DispatchItem',
-      // },
+      {
+        title: 'Dispatch Items',
+        key: 'appsDispatchItem',
+        url: '/apps/DispatchItem',
+      },
       // {
       //   title: 'Dispatch Orders',
       //   key: 'appsDispatchOrders',

@@ -128,7 +128,7 @@
                     </div>
                 </div>
 
-                <nz-table #getproduct [nzData]="products" class="kit__utils__table"
+                <nz-table #getproduct [nzShowPagination]="false" [nzData]="products" class="kit__utils__table"
                     *ngIf="isDisp">
                     <thead>
                         <tr>
@@ -244,7 +244,7 @@
     </nz-select>
   </div> -->
 </div>
-<nz-table #basicTable class="kit__utils__table mb-4" [nzData]="tabledata" *ngIf="isShown">
+<nz-table #basicTable [nzShowPagination]="false" class="kit__utils__table mb-4" [nzData]="tabledata" *ngIf="isShown">
     <thead>
         <tr>
             <th style="text-align: center;"><strong># </strong></th>

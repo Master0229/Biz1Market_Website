@@ -2,9 +2,9 @@
   <div>
     <div class="card" *ngIf="isTable">
       <div class="card-header card-header-flex">
-        <div class=" justify-content-center mr-2 mt-3">
+        <!-- <div class=" justify-content-center mr-2 mt-3">
           <input nz-input type="number" [(ngModel)]="ordNo" placeholder="Order No" min="1" />
-        </div>
+        </div> -->
         <ng-template class="w-100" #ot let-o="result" let-t="term">
           <ngb-highlight [result]="o.name" [term]="t"></ngb-highlight>
         </ng-template>
@@ -14,13 +14,13 @@
           (selectItem)="selectedsupplieritem($event.item)" />
         <br>
         <br>
-        <ng-template class="w-100" #ot let-o="result" let-t="term">
+        <!-- <ng-template class="w-100" #ot let-o="result" let-t="term">
           <ngb-highlight [result]="o.name" [term]="t"></ngb-highlight>
         </ng-template>
         <input #Receiverautocomplete style="height: 33px; width: 200px; margin-top: 15px; margin-left: 20px;"
           #instance="ngbTypeahead" type="text" class="form-control" placeholder="Search Receiver..."
           [ngbTypeahead]="searchreceiver" [resultTemplate]="ot" [inputFormatter]="formatterreceiver"
-          (selectItem)="selectedreceiveritem($event.item)" />
+          (selectItem)="selectedreceiveritem($event.item)" /> -->
         <br>
 
         <div class="d-flex flex-column justify-content-center mr-2" style="margin-left: 20px; width: 200px;">
@@ -168,8 +168,8 @@
       <tr *ngFor="let ord of  basicTable.data; let i = index">
         <td>{{i+1}}</td>
         <td>
-          <a class="btn btn-sm btn-light" href="javascript: void(0);" (click)="getorderid(ord.Id,contentdetail1);">
-            {{ord.OrderNo}}
+          <a class="btn btn-sm btn-light" href="javascript: void(0);" (click)="getorderid(ord.id,contentdetail1);">
+            {{ord.orderNo}}
           </a>
         </td>
         <td>
@@ -179,23 +179,23 @@
           {{ord.supplier}}
         </td>
         <td>
-          {{ord.OrderedDate}}
+          {{ord.orderedDateTime | date: 'MMM d, h:mm a'}}
         </td>
         <td>
-          {{ord.DeliveryDateTime.slice(0,10)}}
+          {{ord.deliveryDateTime | date: 'MMM d, h:mm a'}}
         </td>
 
         <td>
-          {{ord.BillAmount}}
+          {{ord.billAmount}}
         </td>
 
         <td>
           <div class="btn-group mr-2 mb-2">
-            <a href="javascript: void(0);" (click)="deleteOrder(ord.Id)" class="btn btn-sm btn-light pull-left"
+            <a href="javascript: void(0);" (click)="deleteOrder(ord.id)" class="btn btn-sm btn-light pull-left"
               slot="actions">
               <i class="fe fa-lg fe-trash-2"></i>
             </a>
-            <a routerLink="/apps/editinternal/{{ord.Id}}" href="javascript: void(0);" class="btn btn-sm btn-light ">
+            <a routerLink="/apps/editinternal/{{ord.id}}" href="javascript: void(0);" class="btn btn-sm btn-light ">
               <i class="fe fa-lg fe-edit "></i>
             </a>
             <!-- <a routerLink="/apps/dispatch/{{ord.Id}}" href="javascript: void(0);" class="btn btn-sm btn-light ">
