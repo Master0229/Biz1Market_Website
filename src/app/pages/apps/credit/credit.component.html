@@ -4,7 +4,7 @@
   </div>
   <div class="card">
     <div class="card-header card-header-flex" *ngIf="isShown">
-      <div ngbDropdown class="col-md-3 pt-2" style="margin-top: 10px;">
+      <div ngbDropdown class="col-md-3 pt-2">
         <button class="btn btn-secondary" id="dropdownBasic1" ngbDropdownToggle>BillStatus</button>
         <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
           <button (click)="Billstatus(1)" ngbDropdownItem>Pending</button>
@@ -12,7 +12,7 @@
           <button (click)="Billstatus(3)" ngbDropdownItem> Show All Records</button>
         </div>
       </div>
-      <div ngbDropdown style="margin-left:540px;margin-top: 10px;">
+      <div ngbDropdown class="col-md-3 pt-2">
         <button class="btn btn-success" id="dropdownBasic1" ngbDropdownToggle>Credit Pay</button>
         <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
           <button (click)="locback()" ngbDropdownItem>Credit</button>
@@ -20,7 +20,7 @@
         </div>
       </div>
       <!-- </div>  -->
-      <div style="width:15%;margin-top: 10px;margin-left: 10px;" *ngIf="isShown">
+      <div *ngIf="isShown" class="col-md-3 pt-2">
         <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
           <input type="text" [(ngModel)]="term" nz-input placeholder="input search text" (input)="filtersearch()" />
         </nz-input-group>
@@ -45,10 +45,10 @@
       </thead>
       <tbody>
         <tr *ngFor="let ord of creditData">
-          <td style="color: blue;">
+          <td>
             {{ord.billTransId}}
           </td>
-          <td style="color: blue;">
+          <td>
             {{ord.name}}
           </td>
           <td>
@@ -60,7 +60,7 @@
             <span *ngIf="ord.contactTypeId == 6">Customer</span>
             <span *ngIf="ord.contactTypeId == 7">Others</span>
           </td>
-          <td style="color: blue;">
+          <td>
             {{ord.name1}}
           </td>
           <td>
@@ -75,20 +75,20 @@
           <td>
             {{ord.transDate.slice(0,10)}}
           </td>
-          <td style="color: blue;">
+          <td>
             <a (click)="getrepayList(ord.contactId)" href="javascript: void(0);" class="btn btn-sm btn-light ">
-              <i class="fe fe-dollar-sign " style="color: blue;"></i>
+              <i class="fe fe-dollar-sign "></i>
             </a>
             <a routerLink="/apps/editcredit/{{ord.billTransId}}" href="javascript: void(0);"
               class="btn btn-sm btn-light ">
-              <i class="fa fa-edit" aria-hidden="true" style="color: blue;"></i>
+              <i class="fa fa-edit" aria-hidden="true"></i>
             </a>
             <a href="javascript: void(0);" (click)="Delete(ord.billTransId)" class="btn btn-sm btn-light pull-left"
-              slot="actions" style="color: blue;">
+              slot="actions">
               <i class="fe fe-trash mr-1"></i>
             </a>
             <a href="javascript: void(0);" routerLink="/apps/creditdetails/{{ord.billTransId}}"
-              class="btn btn-sm btn-light pull-left" slot="actions" style="color: blue;">
+              class="btn btn-sm btn-light pull-left" slot="actions">
               <i class="fad fa-info"></i>
             </a>
           </td>
@@ -198,7 +198,7 @@
     <label class="col-md-3 col-form-label" for="formControlRange">Transaction Date<span
         style="color: red;">*</span></label>
     <div class="col-md-3 pt-2">
-      <nz-date-picker  class="form-control"  [(ngModel)]="date" (ngModelChange)="onChange($event)"></nz-date-picker>
+      <nz-date-picker class="form-control" [(ngModel)]="date" (ngModelChange)="onChange($event)"></nz-date-picker>
     </div>
   </div>
 

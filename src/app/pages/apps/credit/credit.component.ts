@@ -50,7 +50,7 @@ export class CreditComponent implements OnInit {
   TotalBalance = null
   supplier = ''
   PaymentType = 0
-  paidAmount = 1000
+  paidAmount = 0
   items = []
   bankAccountId = null
   accTypeId = null
@@ -72,7 +72,7 @@ export class CreditComponent implements OnInit {
     TotalBalance: null,
     TransDateTime: moment().format('YYYY-MM-DD HH:MM A'),
     Payment: null,
-    paymentmode: null,
+    paymentmode: this.paymentmode,
     TransDate: moment().format('YYYY-MM-DD HH:MM A'),
     CreatedDate: moment().format('YYYY-MM-DD HH:MM A'),
   }
